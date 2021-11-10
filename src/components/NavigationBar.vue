@@ -37,7 +37,7 @@ export default {
     items: [
       {title: 'Human', icon: 'mdi-account-multiple-outline', to: '/'},
       {title: 'Performer', icon: 'mdi-account-cog', to: '/performer'},
-      {title: 'Case', icon: 'mdi-briefcase-search-outline', to: ''},
+      {title: 'Case', icon: 'mdi-briefcase-search-outline', to: '/case'},
       {title: 'Client', icon: 'mdi-account-multiple-outline', to: ''},
       {title: 'Address', icon: 'mdi-home', to: ''},
       {title: 'Evidence', icon: 'mdi-clipboard-text-search-outline', to: ''},
