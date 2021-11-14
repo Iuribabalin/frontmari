@@ -7,41 +7,34 @@
       <v-card-text>
         <v-row>
           <v-col>
+            <v-select
+                label="Human"
+                :items="humans"
+                v-model = "selectHuman"
+            ></v-select>
             <v-text-field
-                v-model="name"
-                label="Name"
+                v-model="appearance"
+                label="Appearance"
                 required
             ></v-text-field>
           </v-col>
           <v-col>
-            <v-text-field
-                v-model="surname"
-                label="Surname"
-                required
-            ></v-text-field>
+            <v-container
+                class="px-0"
+                fluid
+            >
+              <v-checkbox
+                  v-model="checkbox"
+                  :label="`Is criminal: ${checkbox.toString()}`"
+              ></v-checkbox>
+            </v-container>
           </v-col>
         </v-row>
         <v-row>
-          <v-col>
-            <v-text-field
-                v-model="age"
-                label="Age"
-                required
-            ></v-text-field>
-          </v-col>
-          <v-col>
-            <v-text-field
-                v-model="gender"
-                label="Gender"
-                required
-            ></v-text-field>
-          </v-col>
+
+
         </v-row>
-        <v-text-field
-            v-model="profession"
-            label="Profession"
-            required
-        ></v-text-field>
+
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -65,27 +58,42 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "AddHumanCard",
   data: () => ({
-    name: '',
-    surname: '',
-    age: '',
-    gender: '',
-    profession: ''
+    humans:[],
+    selectHuman:'',
+    appearance: '',
+    checkbox: false,
+    baseUrl:'http://localhost:10511'
   }),
   methods: {
-    saveAndClose() {
-      console.log(this.name)
+    save() {
+      console.log(this.selectHuman)
       this.$emit('updateParent', {
         dialog: false
       })
     },
+
     doSomething() {
       this.$emit('updateParent', {
         dialog: false
       })
+    },
+    getDataFromHumanList() {
+      axios.create({
+        baseURL: this.baseUrl
+      }).get('/human').then(resp => {
+        for (let i = 0; i < resp.data.length; i++) {
+          this.humans.push(resp.data[i].name + " " + resp.data[i].surname)
+        }
+      })
     }
+  },
+  beforeMount() {
+    this.getDataFromHumanList()
   }
 }
 </script>

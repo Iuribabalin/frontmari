@@ -12,36 +12,9 @@
                 label="Name"
                 required
             ></v-text-field>
-          </v-col>
-          <v-col>
-            <v-text-field
-                v-model="surname"
-                label="Surname"
-                required
-            ></v-text-field>
+
           </v-col>
         </v-row>
-        <v-row>
-          <v-col>
-            <v-text-field
-                v-model="age"
-                label="Age"
-                required
-            ></v-text-field>
-          </v-col>
-          <v-col>
-            <v-text-field
-                v-model="gender"
-                label="Gender"
-                required
-            ></v-text-field>
-          </v-col>
-        </v-row>
-        <v-text-field
-            v-model="profession"
-            label="Profession"
-            required
-        ></v-text-field>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -66,13 +39,9 @@
 
 <script>
 export default {
-  name: "AddHumanCard",
+  name: "AddCrimeTypeCard",
   data: () => ({
     name: '',
-    surname: '',
-    age: '',
-    gender: '',
-    profession: ''
   }),
   methods: {
     saveAndClose() {

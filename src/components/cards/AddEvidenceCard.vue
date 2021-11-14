@@ -12,36 +12,25 @@
                 label="Name"
                 required
             ></v-text-field>
+            <v-select
+                label="Suspect"
+                :items="suspects"
+                v-model = "selectSuspect"
+            ></v-select>
           </v-col>
           <v-col>
-            <v-text-field
-                v-model="surname"
-                label="Surname"
-                required
-            ></v-text-field>
+            <v-select
+                label="Case"
+                :items="cases"
+                v-model = "selectCase"
+            ></v-select>
           </v-col>
         </v-row>
         <v-row>
-          <v-col>
-            <v-text-field
-                v-model="age"
-                label="Age"
-                required
-            ></v-text-field>
-          </v-col>
-          <v-col>
-            <v-text-field
-                v-model="gender"
-                label="Gender"
-                required
-            ></v-text-field>
-          </v-col>
+
+
         </v-row>
-        <v-text-field
-            v-model="profession"
-            label="Profession"
-            required
-        ></v-text-field>
+
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -65,27 +54,53 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
-  name: "AddHumanCard",
+  name: "AddEvidenceCard",
   data: () => ({
     name: '',
-    surname: '',
-    age: '',
-    gender: '',
-    profession: ''
+    cases:[],
+    suspects:[],
+    selectCase:'',
+    selectSuspect:'',
+    baseUrl:'http://localhost:10511'
   }),
   methods: {
-    saveAndClose() {
-      console.log(this.name)
+    save() {
+      console.log(this.selectCase)
       this.$emit('updateParent', {
         dialog: false
       })
     },
+
     doSomething() {
       this.$emit('updateParent', {
         dialog: false
       })
+    },
+    getDataFromCaseList() {
+      axios.create({
+        baseURL: this.baseUrl
+      }).get('/case').then(resp => {
+        for (let i = 0; i < resp.data.length; i++) {
+          this.cases.push(resp.data[i].caseName)
+        }
+      })
+    },
+    getDataFromSuspectList() {
+      axios.create({
+        baseURL: this.baseUrl
+      }).get('/suspect').then(resp => {
+        for (let i = 0; i < resp.data.length; i++) {
+          this.suspects.push(resp.data[i].name)
+        }
+      })
     }
+  },
+  beforeMount() {
+    this.getDataFromCaseList()
+    this.getDataFromSuspectList()
   }
 }
 </script>
