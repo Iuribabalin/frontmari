@@ -110,7 +110,7 @@ export default {
         baseURL: this.baseUrl
       }).get('/crimetype').then(resp => {
         for (let i = 0; i < resp.data.length; i++) {
-          this.crimetypes.push(resp.data[i].crimeType)
+          this.crimetypes.push(resp.data[i].name)
         }
       })
     },
@@ -119,17 +119,16 @@ export default {
         baseURL: this.baseUrl
       }).get('/punishment').then(resp => {
         for (let i = 0; i < resp.data.length; i++) {
-          this.punishments.push(resp.data[i].punishmentName)
+          this.punishments.push(resp.data[i].name)
         }
       })
     },
-    beforeMount() {
-      this.getDataFromHumanList()
-      this.getDataFromPunishmentList()
-      this.getDataFromCrimeTypeList()
-      this.getDataFromCaseList()
-
-    }
+  },
+  beforeMount() {
+    this.getDataFromHumanList()
+    this.getDataFromPunishmentList()
+    this.getDataFromCrimeTypeList()
+    this.getDataFromCaseList()
   }
 }
 </script>
