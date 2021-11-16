@@ -65,6 +65,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "AddHumanCard",
   data: () => ({
@@ -72,11 +74,20 @@ export default {
     surname: '',
     age: '',
     gender: '',
-    profession: ''
+    profession: '',
+    baseUrl: 'http://localhost:10511'
   }),
   methods: {
     saveAndClose() {
-      console.log(this.name)
+      let data = {
+        name: this.name,
+        surname: this.surname,
+        age: this.age,
+        gender: this.gender,
+        profession: this.profession
+      }
+      axios.create({baseURL: this.baseUrl}).post('/human', data)
+      window.location.reload();
       this.$emit('updateParent', {
         dialog: false
       })

@@ -55,7 +55,8 @@ export default {
       axios.create({
         baseURL: this.baseUrl
       }).delete(this.urlProps + "/" + item.id)
-    }
+      this.getTableInfo()
+    },
   },
 
   beforeMount() {
