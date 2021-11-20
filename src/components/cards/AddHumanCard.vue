@@ -30,11 +30,10 @@
             ></v-text-field>
           </v-col>
           <v-col>
-            <v-text-field
+            <v-checkbox
                 v-model="gender"
-                label="Gender"
-                required
-            ></v-text-field>
+                :label="`Gender: ${gender.toString()}`"
+            ></v-checkbox>
           </v-col>
         </v-row>
         <v-text-field
@@ -73,7 +72,7 @@ export default {
     name: '',
     surname: '',
     age: '',
-    gender: '',
+    gender: false,
     profession: '',
     baseUrl: 'http://localhost:10511'
   }),
