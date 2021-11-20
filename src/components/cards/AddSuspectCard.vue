@@ -77,7 +77,7 @@ export default {
       let data = {
         human_id: human_id,
         appearance: this.appearance,
-        checkbox: this.checkbox
+        police: this.checkbox
       }
       console.log(data)
       axios

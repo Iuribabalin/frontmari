@@ -75,8 +75,8 @@ export default {
       let human_id = this.mainHumans[this.findIndex].id
       let data = {
         human_id: human_id,
-        money: this.money,
-        checkbox: this.checkbox
+        cash: this.money,
+        police: this.checkbox
       }
       console.log(data.money)
       axios

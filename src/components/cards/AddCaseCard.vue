@@ -68,8 +68,9 @@ export default {
     baseUrl:'http://localhost:10511'
   }),
   methods: {
+
     save() {
-      console.log(this.selectClient)
+      console.log(this.selectCase)
       this.$emit('updateParent', {
         dialog: false
       })
@@ -103,6 +104,7 @@ export default {
       })
     }
   },
+
   beforeMount() {
     this.getDataFromClientList()
     this.getDataFromAddressList()
