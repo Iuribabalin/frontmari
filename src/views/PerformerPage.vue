@@ -6,7 +6,7 @@
     <v-col cols="max">
       <AppBar :nav_context=this.nav_context :nowStatusButton=this.nowStatusButton @updateParent="statusButton"></AppBar>
       <AlertCard :error-text="this.errorText" v-if="error" @updateAlert="closeAlert"></AlertCard>
-      <Table :headersProps="this.headers" :urlProps="this.url" v-show="headers"></Table>
+      <Table :headersProps="this.headers" :urlProps="this.url" :nav_context=this.nav_context v-show="headers"></Table>
     </v-col>
   </v-row>
 </template>

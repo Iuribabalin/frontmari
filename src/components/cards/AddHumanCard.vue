@@ -30,11 +30,11 @@
             ></v-text-field>
           </v-col>
           <v-col>
-            <v-text-field
+            <v-checkbox
                 v-model="gender"
-                label="Gender"
-                required
-            ></v-text-field>
+                @change="changeGender"
+                :label=this.genderName
+            ></v-checkbox>
           </v-col>
         </v-row>
         <v-text-field
@@ -73,10 +73,15 @@ export default {
     name: '',
     surname: '',
     age: '',
-    gender: '',
+    gender: false,
+    genderName: 'man',
     profession: '',
     baseUrl: 'http://localhost:10511'
   }),
+  props: {
+    item: null,
+    flagEdit: Boolean,
+  },
   methods: {
     saveAndClose() {
       let data = {
@@ -86,10 +91,27 @@ export default {
         gender: this.gender,
         profession: this.profession
       }
-      axios.create({baseURL: this.baseUrl}).post('/human', data)
-          .then(window.location.reload())
+      if (this.flagEdit) {
+        data = {
+          id: this.item.id,
+          name: this.name,
+          surname: this.surname,
+          age: this.age,
+          gender: this.gender,
+          profession: this.profession
+        }
+        axios.create({baseURL: this.baseUrl}).put('/human/' + this.item.id, data)
+            .then(window.location.reload())
+      } else {
+        axios.create({baseURL: this.baseUrl}).post('/human', data)
+            .then(window.location.reload())
+      }
+      data = {
+        dialog: false,
+        error: false
+      }
       this.$emit('updateParent', {
-        dialog: false
+        data
       })
     },
     doSomething() {
@@ -101,7 +123,31 @@ export default {
         data
       })
     },
-  }
+    changeGender() {
+      if (this.gender) {
+        this.genderName = "woman"
+      } else {
+        this.genderName = "man"
+      }
+    },
+    checkAndFill(item) {
+      if (item != null) {
+        axios.create({
+          baseURL: this.baseUrl
+        }).get('/human/' + item.id).then(resp => {
+          this.name = resp.data.name
+          this.surname = resp.data.surname
+          this.age = resp.data.age
+          this.gender = resp.data.gender
+          this.changeGender()
+          this.profession = resp.data.profession
+        })
+      }
+    }
+  },
+  beforeMount() {
+    this.checkAndFill(this.item)
+  },
 }
 </script>
 

@@ -9,13 +9,7 @@
       }"
   >
     <template v-slot:item.actions="{ item }">
-      <v-icon
-          small
-          class="mr-2"
-          @click="editItem(item)"
-      >
-        mdi-pencil
-      </v-icon>
+      <DialogFromTable :nav_context="nav_context" :item="item"/>
       <v-icon
           small
           @click="deleteItem(item)"
@@ -28,13 +22,15 @@
 
 <script>
 import axios from "axios";
+import DialogFromTable from "@/components/DialogFromTable";
 
 export default {
   name: "Table",
+  components: {DialogFromTable},
   props: {
     headersProps: [],
     urlProps: String,
-    editFlag: Boolean,
+    nav_context: String,
   },
   data: () => ({
     headers: [],
@@ -56,7 +52,7 @@ export default {
       axios.create({
         baseURL: this.baseUrl
       }).delete(this.urlProps + "/" + item.id)
-      .then(window.location.reload())
+          .then(window.location.reload())
     },
   },
 
