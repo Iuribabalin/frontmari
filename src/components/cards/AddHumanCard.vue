@@ -87,8 +87,12 @@ export default {
       }
       axios.create({baseURL: this.baseUrl}).post('/human', data)
           .then(window.location.reload())
+      data = {
+        dialog: false,
+        error: false
+      }
       this.$emit('updateParent', {
-        dialog: false
+        data
       })
     },
     doSomething() {
