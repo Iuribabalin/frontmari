@@ -12,36 +12,9 @@
                 label="Name"
                 required
             ></v-text-field>
-          </v-col>
-          <v-col>
-            <v-text-field
-                v-model="surname"
-                label="Surname"
-                required
-            ></v-text-field>
+
           </v-col>
         </v-row>
-        <v-row>
-          <v-col>
-            <v-text-field
-                v-model="age"
-                label="Age"
-                required
-            ></v-text-field>
-          </v-col>
-          <v-col>
-            <v-text-field
-                v-model="gender"
-                label="Gender"
-                required
-            ></v-text-field>
-          </v-col>
-        </v-row>
-        <v-text-field
-            v-model="profession"
-            label="Profession"
-            required
-        ></v-text-field>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -68,28 +41,24 @@
 import axios from "axios";
 
 export default {
-  name: "AddHumanCard",
+  name: "AddCrimeTypeCard",
   data: () => ({
     name: '',
-    surname: '',
-    age: '',
-    gender: '',
-    profession: '',
     baseUrl: 'http://localhost:10511'
   }),
   methods: {
     saveAndClose() {
       let data = {
-        name: this.name,
-        surname: this.surname,
-        age: this.age,
-        gender: this.gender,
-        profession: this.profession
+        name: this.name
       }
-      axios.create({baseURL: this.baseUrl}).post('/human', data)
+      axios.create({baseURL: this.baseUrl}).post('/crimetype', data)
           .then(window.location.reload())
+      data = {
+        dialog: false,
+        error: false
+      }
       this.$emit('updateParent', {
-        dialog: false
+        data
       })
     },
     doSomething() {

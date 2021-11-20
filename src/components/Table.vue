@@ -32,23 +32,32 @@ import axios from "axios";
 export default {
   name: "Table",
   props: {
-    headersProps:[],
+    headersProps: [],
     urlProps: String,
     editFlag: Boolean,
   },
   data: () => ({
     headers: [],
     desserts: [],
+    renderComponent: true,
+    baseUrl: 'http://localhost:10511'
   }),
   methods: {
     getTableInfo: function () {
       axios.create({
-        baseURL: "http://localhost:10511"
+        baseURL: this.baseUrl
       }).get(this.urlProps).then(resp => {
         this.headers = this.headersProps
         this.desserts = resp.data
       })
-    }
+    },
+
+    deleteItem: function (item) {
+      axios.create({
+        baseURL: this.baseUrl
+      }).delete(this.urlProps + "/" + item.id)
+      .then(window.location.reload())
+    },
   },
 
   beforeMount() {

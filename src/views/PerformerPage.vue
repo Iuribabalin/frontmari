@@ -5,6 +5,7 @@
     </v-col>
     <v-col cols="max">
       <AppBar :nav_context=this.nav_context :nowStatusButton=this.nowStatusButton @updateParent="statusButton"></AppBar>
+      <AlertCard :error-text="this.errorText" v-if="error" @updateAlert="closeAlert"></AlertCard>
       <Table :headersProps="this.headers" :urlProps="this.url" v-show="headers"></Table>
     </v-col>
   </v-row>
@@ -14,10 +15,11 @@
 import NavigationBar from "@/components/NavigationBar";
 import AppBar from "@/components/AppBar";
 import Table from "@/components/Table";
+import AlertCard from "@/components/alerts/AlertCard";
 
 export default {
   name: "PerformerPage",
-  components: {AppBar, Table, NavigationBar},
+  components: {AlertCard, AppBar, Table, NavigationBar},
   data: () => ({
     url: '/performer',
     nav_context: 'performer',
@@ -41,19 +43,28 @@ export default {
         value: 'profession'
       },
     ],
+    addFlag: false,
+    error: false,
+    errorText: "Ошибка в добавлении нового элемента",
   }),
   methods: {
     statusButton(newState) {
-      this.nowStatusButton = newState.statusButton
-      if (this.nowStatusButton) {
+      this.nowStatusButton = newState.data.statusButton
+      this.error = newState.data.error
+      if (this.nowStatusButton && !this.addFlag) {
+        this.addFlag = true
         this.headers.push({text: 'Actions', value: 'actions', sortable: false})
       }
-      if(!this.nowStatusButton){
+      if (!this.nowStatusButton && this.addFlag) {
+        this.addFlag = false
         this.headers.pop()
       }
-      console.log(this.headers)
+    },
+    closeAlert(flag) {
+      console.log(flag.flag)
+      this.error = flag.flag
     }
-  }
+  },
 }
 </script>
 

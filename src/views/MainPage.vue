@@ -23,7 +23,7 @@ export default {
     nav_context: 'main',
     nowStatusButton: false,
     headers: [
-      {text: 'Id', align: 'start', value: 'human_id',},
+      {text: 'Id', align: 'start', value: 'id'},
       {text: 'Name', value: 'name'},
       {text: 'Surname', value: 'surname'},
       {text: 'Age', value: 'age'},
@@ -33,13 +33,14 @@ export default {
   }),
   methods: {
     statusButton(newState) {
-      this.nowStatusButton = newState.statusButton
+      this.nowStatusButton = newState.data.statusButton
       if (this.nowStatusButton) {
         this.headers.push({text: 'Actions', value: 'actions', sortable: false})
       }
       if(!this.nowStatusButton){
         this.headers.pop()
       }
+      console.log(this.headers)
     }
   }
 }

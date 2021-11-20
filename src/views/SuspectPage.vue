@@ -16,11 +16,11 @@ import AppBar from "@/components/AppBar";
 import Table from "@/components/Table";
 
 export default {
-  name: "CasePage",
+  name: "SuspectPage",
   components: {AppBar, Table, NavigationBar},
   data: () => ({
-    url: '/case',
-    nav_context: 'case',
+    url: '/suspect',
+    nav_context: 'suspect',
     nowStatusButton: false,
     headers: [
       {
@@ -29,24 +29,16 @@ export default {
         value: 'id',
       },
       {
-        text: 'Client',
-        value: 'client'
+        text: 'Name',
+        value: 'name'
       },
       {
-        text: 'Address',
-        value: 'address'
+        text: 'Appearance',
+        value: 'appearance'
       },
       {
-        text: 'Case name',
-        value: 'caseName'
-      },
-      {
-        text: 'Start',
-        value: 'start'
-      },
-      {
-        text: 'Finish',
-        value: 'finish'
+        text: 'Is criminal',
+        value: 'is_criminal'
       },
     ],
   }),

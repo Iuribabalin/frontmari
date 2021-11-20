@@ -7,41 +7,30 @@
       <v-card-text>
         <v-row>
           <v-col>
+            <v-select
+                label="Client"
+                :items="clients"
+                v-model = "selectClient"
+            ></v-select>
             <v-text-field
                 v-model="name"
-                label="Name"
+                label="Case name"
                 required
             ></v-text-field>
           </v-col>
           <v-col>
-            <v-text-field
-                v-model="surname"
-                label="Surname"
-                required
-            ></v-text-field>
+            <v-select
+                label="Address"
+                :items="addresses"
+                v-model = "selectAddress"
+            ></v-select>
           </v-col>
         </v-row>
         <v-row>
-          <v-col>
-            <v-text-field
-                v-model="age"
-                label="Age"
-                required
-            ></v-text-field>
-          </v-col>
-          <v-col>
-            <v-text-field
-                v-model="gender"
-                label="Gender"
-                required
-            ></v-text-field>
-          </v-col>
+
+
         </v-row>
-        <v-text-field
-            v-model="profession"
-            label="Profession"
-            required
-        ></v-text-field>
+
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -68,30 +57,24 @@
 import axios from "axios";
 
 export default {
-  name: "AddHumanCard",
+  name: "AddCaseCard",
   data: () => ({
+    clients:[],
+    addresses:[],
+    selectClient:'',
+    selectAddress:'',
     name: '',
-    surname: '',
-    age: '',
-    gender: '',
-    profession: '',
-    baseUrl: 'http://localhost:10511'
+
+    baseUrl:'http://localhost:10511'
   }),
   methods: {
-    saveAndClose() {
-      let data = {
-        name: this.name,
-        surname: this.surname,
-        age: this.age,
-        gender: this.gender,
-        profession: this.profession
-      }
-      axios.create({baseURL: this.baseUrl}).post('/human', data)
-          .then(window.location.reload())
+    save() {
+      console.log(this.selectClient)
       this.$emit('updateParent', {
         dialog: false
       })
     },
+
     doSomething() {
       let data = {
         dialog: false,
@@ -101,6 +84,28 @@ export default {
         data
       })
     },
+    getDataFromClientList() {
+      axios.create({
+        baseURL: this.baseUrl
+      }).get('/client').then(resp => {
+        for (let i = 0; i < resp.data.length; i++) {
+          this.clients.push(resp.data[i].name)
+        }
+      })
+    },
+    getDataFromAddressList(){
+      axios.create({
+        baseURL: this.baseUrl
+      }).get('/address').then(resp => {
+        for(let i = 0; i < resp.data.length; i++){
+          this.addresses.push(resp.data[i].city + " " + resp.data[i].street + " " + resp.data[i].house)
+        }
+      })
+    }
+  },
+  beforeMount() {
+    this.getDataFromClientList()
+    this.getDataFromAddressList()
   }
 }
 </script>
