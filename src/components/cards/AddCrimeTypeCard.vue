@@ -52,16 +52,24 @@ export default {
         name: this.name
       }
       axios.create({baseURL: this.baseUrl}).post('/crimetype', data)
-      window.location.reload();
+          .then(window.location.reload())
+      data = {
+        dialog: false,
+        error: false
+      }
       this.$emit('updateParent', {
-        dialog: false
+        data
       })
     },
     doSomething() {
+      let data = {
+        dialog: false,
+        error: false
+      }
       this.$emit('updateParent', {
-        dialog: false
+        data
       })
-    }
+    },
   }
 }
 </script>

@@ -58,9 +58,12 @@ export default {
     dialog: false,
   }),
   methods: {
-    updateDialog(state) {
-      this.dialog = state.dialog
-
+    updateDialog(data) {
+      this.dialog = data.data.dialog
+      console.log("error state 2: " + data.data.error)
+      this.$emit('updateParent', {
+        error: data.data.error
+      })
     }
   }
 }

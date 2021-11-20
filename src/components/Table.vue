@@ -39,6 +39,7 @@ export default {
   data: () => ({
     headers: [],
     desserts: [],
+    renderComponent: true,
     baseUrl: 'http://localhost:10511'
   }),
   methods: {
@@ -55,7 +56,7 @@ export default {
       axios.create({
         baseURL: this.baseUrl
       }).delete(this.urlProps + "/" + item.id)
-      this.getTableInfo()
+      .then(window.location.reload())
     },
   },
 

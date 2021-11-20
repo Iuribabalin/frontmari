@@ -67,16 +67,24 @@ export default {
           house: this.house
         }
         axios.create({baseURL: this.baseUrl}).post('/address', data)
-        window.location.reload();
+        .then(window.location.reload())
+        data = {
+          dialog: false,
+          error: false
+        }
         this.$emit('updateParent', {
-          dialog: false
+          data
         })
       },
-    doSomething() {
-      this.$emit('updateParent', {
-        dialog: false
-      })
-    }
+      doSomething() {
+        let data = {
+          dialog: false,
+          error: false
+        }
+        this.$emit('updateParent', {
+          data
+        })
+      },
   }
 }
 </script>

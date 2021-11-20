@@ -87,16 +87,20 @@ export default {
         profession: this.profession
       }
       axios.create({baseURL: this.baseUrl}).post('/human', data)
-      window.location.reload();
+          .then(window.location.reload())
       this.$emit('updateParent', {
         dialog: false
       })
     },
     doSomething() {
+      let data = {
+        dialog: false,
+        error: false
+      }
       this.$emit('updateParent', {
-        dialog: false
+        data
       })
-    }
+    },
   }
 }
 </script>

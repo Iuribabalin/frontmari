@@ -83,8 +83,12 @@ export default {
     },
 
     doSomething() {
+      let data = {
+        dialog: false,
+        error: false
+      }
       this.$emit('updateParent', {
-        dialog: false
+        data
       })
     },
     getDataFromCaseList() {

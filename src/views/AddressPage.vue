@@ -44,7 +44,7 @@ export default {
   }),
   methods: {
     statusButton(newState) {
-      this.nowStatusButton = newState.statusButton
+      this.nowStatusButton = newState.data.statusButton
       if (this.nowStatusButton) {
         this.headers.push({text: 'Actions', value: 'actions', sortable: false})
       }

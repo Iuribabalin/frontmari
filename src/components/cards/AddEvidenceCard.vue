@@ -73,12 +73,6 @@ export default {
         dialog: false
       })
     },
-
-    doSomething() {
-      this.$emit('updateParent', {
-        dialog: false
-      })
-    },
     getDataFromCaseList() {
       axios.create({
         baseURL: this.baseUrl
