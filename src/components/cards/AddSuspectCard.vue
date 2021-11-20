@@ -65,18 +65,48 @@ export default {
   data: () => ({
     humans:[],
     selectHuman:'',
+    mainHumans:[],
     appearance: '',
     checkbox: false,
     baseUrl:'http://localhost:10511'
   }),
   methods: {
-    save() {
-      console.log(this.selectHuman)
+    saveAndClose() {
+      this.findInMass(this.selectHuman, this.humans)
+      let human_id = this.mainHumans[this.findIndex].id
+      let data = {
+        human_id: human_id,
+        appearance: this.appearance,
+        checkbox: this.checkbox
+      }
+      console.log(data)
+      axios
+          .create({baseURL: this.baseUrl})
+          .post('/client', data)
+          .then(
+              resp => {
+                console.log(resp)
+                data = {
+                  dialog: false,
+                  error: false
+                }
+                window.location.reload();
+              }
+          )
+          .catch(error  => {
+            console.log ("error start: " + error)
+            data = {
+              dialog: false,
+              error: true
+            }
+            this.$emit('updateParent', {
+              data: data,
+            })
+          })
       this.$emit('updateParent', {
-        dialog: false
+        data: data,
       })
     },
-
     doSomething() {
       let data = {
         dialog: false,
@@ -90,10 +120,19 @@ export default {
       axios.create({
         baseURL: this.baseUrl
       }).get('/human').then(resp => {
+        this.mainHumans = resp.data;
         for (let i = 0; i < resp.data.length; i++) {
           this.humans.push(resp.data[i].name + " " + resp.data[i].surname)
         }
       })
+    },
+    findInMass(findName, mass) {
+      for (let i = 0; i < mass.length; i++) {
+        if (mass[i] == findName) {
+          this.findIndex = i;
+          break;
+        }
+      }
     }
   },
   beforeMount() {

@@ -15,7 +15,6 @@
             <v-text-field
                 v-model="money"
                 label="Money"
-                required
             ></v-text-field>
           </v-col>
           <v-col>
@@ -65,18 +64,39 @@ export default {
   data: () => ({
     humans:[],
     selectHuman:'',
+    mainHumans: [],
     money: '',
     checkbox: false,
     baseUrl:'http://localhost:10511'
   }),
   methods: {
-    save() {
-      console.log(this.selectHuman)
+    saveAndClose() {
+      this.findInMass(this.selectHuman, this.humans)
+      let human_id = this.mainHumans[this.findIndex].id
+      let data = {
+        human_id: human_id,
+        money: this.money,
+        checkbox: this.checkbox
+      }
+      console.log(data.money)
+      axios
+          .create({baseURL: this.baseUrl})
+          .post('/client', data)
+          .then(
+              resp => {
+                console.log(resp)
+
+                window.location.reload();
+              }
+          )
+      data = {
+        dialog: false,
+        error: false
+      }
       this.$emit('updateParent', {
-        dialog: false
+        data: data,
       })
     },
-
     doSomething() {
       let data = {
         dialog: false,
@@ -90,10 +110,19 @@ export default {
       axios.create({
         baseURL: this.baseUrl
       }).get('/human').then(resp => {
+        this.mainHumans = resp.data;
         for (let i = 0; i < resp.data.length; i++) {
           this.humans.push(resp.data[i].name + " " + resp.data[i].surname)
         }
       })
+    },
+    findInMass(findName, mass) {
+      for (let i = 0; i < mass.length; i++) {
+        if (mass[i] == findName) {
+          this.findIndex = i;
+          break;
+        }
+      }
     }
   },
     beforeMount() {
