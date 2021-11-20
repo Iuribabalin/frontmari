@@ -48,8 +48,13 @@ export default {
     baseUrl:'http://localhost:10511'
   }),
   methods: {
-    save() {
-      console.log(this.selectHuman)
+    saveAndClose() {
+      let data = {
+        selectHuman: this.selectHuman,
+        selectAddress: this.selectAddress
+      }
+      axios.create({baseURL: this.baseUrl}).post('/performer', data)
+      window.location.reload();
       this.$emit('updateParent', {
         dialog: false
       })

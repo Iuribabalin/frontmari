@@ -49,20 +49,29 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "AddAddressCard",
   data: () => ({
     city: '',
     street: '',
     house: '',
+    baseUrl: 'http://localhost:10511'
   }),
-  methods: {
-    saveAndClose() {
-      console.log(this.name)
-      this.$emit('updateParent', {
-        dialog: false
-      })
-    },
+    methods: {
+      saveAndClose() {
+        let data = {
+          city: this.city,
+          street: this.street,
+          house: this.house
+        }
+        axios.create({baseURL: this.baseUrl}).post('/address', data)
+        window.location.reload();
+        this.$emit('updateParent', {
+          dialog: false
+        })
+      },
     doSomething() {
       this.$emit('updateParent', {
         dialog: false

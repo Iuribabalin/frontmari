@@ -38,14 +38,21 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "AddCrimeTypeCard",
   data: () => ({
     name: '',
+    baseUrl: 'http://localhost:10511'
   }),
   methods: {
     saveAndClose() {
-      console.log(this.name)
+      let data = {
+        name: this.name
+      }
+      axios.create({baseURL: this.baseUrl}).post('/crimetype', data)
+      window.location.reload();
       this.$emit('updateParent', {
         dialog: false
       })

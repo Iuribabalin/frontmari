@@ -45,15 +45,23 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "AddPunishmentCard",
   data: () => ({
     name: '',
     lasting: '',
+    baseUrl: 'http://localhost:10511'
   }),
   methods: {
     saveAndClose() {
-      console.log(this.name)
+      let data = {
+        name: this.name,
+        lasting: this.lasting
+      }
+      axios.create({baseURL: this.baseUrl}).post('/punishment', data)
+      window.location.reload();
       this.$emit('updateParent', {
         dialog: false
       })

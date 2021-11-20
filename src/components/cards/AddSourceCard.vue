@@ -45,15 +45,23 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "AddSourceCard",
   data: () => ({
     name: '',
     rating: '',
+    baseUrl: 'http://localhost:10511'
   }),
   methods: {
     saveAndClose() {
-      console.log(this.name)
+      let data = {
+        name: this.name,
+        rating: this.rating
+      }
+      axios.create({baseURL: this.baseUrl}).post('/source', data)
+      window.location.reload();
       this.$emit('updateParent', {
         dialog: false
       })
