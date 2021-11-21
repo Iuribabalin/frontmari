@@ -70,6 +70,7 @@ export default {
 
   beforeMount() {
     this.getTableInfo()
+
   },
 }
 </script>

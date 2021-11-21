@@ -70,6 +70,10 @@ export default {
     checkbox: false,
     baseUrl:'http://localhost:10511'
   }),
+  props: {
+    item: null,
+    flagEdit: Boolean,
+  },
   methods: {
     saveAndClose() {
       this.findInMass(this.selectHuman, this.humans)
@@ -77,36 +81,28 @@ export default {
       let data = {
         human_id: human_id,
         appearance: this.appearance,
-        police: this.checkbox
+        criminal: this.checkbox
       }
-      console.log(data)
-      axios
-          .create({baseURL: this.baseUrl})
-          .post('/client', data)
-          .then(
-              resp => {
-                console.log(resp)
-                data = {
-                  dialog: false,
-                  error: false
-                }
-                window.location.reload();
-              }
-          )
-          .catch(error  => {
-            console.log ("error start: " + error)
-            data = {
-              dialog: false,
-              error: true
-            }
+      if (this.flagEdit) {
+        data = {
+          human_id: human_id,
+          appearance: this.appearance,
+          criminal: this.checkbox
+        }
+        axios.create({baseURL: this.baseUrl}).put('/suspect/' + this.item.id, data)
+            .then(window.location.reload())
+      } else {
+        axios.create({baseURL: this.baseUrl}).post('/suspect', data)
+            .then(window.location.reload())
+      }
+      data = {
+        dialog: false,
+        error: false
+      }
             this.$emit('updateParent', {
               data: data,
             })
-          })
-      this.$emit('updateParent', {
-        data: data,
-      })
-    },
+          },
     doSomething() {
       let data = {
         dialog: false,
@@ -133,10 +129,22 @@ export default {
           break;
         }
       }
+    },
+    checkAndFill(item) {
+      if (item != null) {
+        axios.create({
+          baseURL: this.baseUrl
+        }).get('/suspect/' + item.id).then(resp => {
+          this.appearance = resp.data.appearance
+          this.checkbox = resp.data.criminal
+          this.selectHuman = resp.data.human.name + " " + resp.data.human.surname
+        })
+      }
     }
   },
   beforeMount() {
     this.getDataFromHumanList()
+    this.checkAndFill(this.item)
   }
 }
 </script>

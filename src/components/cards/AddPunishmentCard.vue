@@ -54,29 +54,60 @@ export default {
     lasting: '',
     baseUrl: 'http://localhost:10511'
   }),
+  props: {
+    item: null,
+    flagEdit: Boolean,
+  },
   methods: {
     saveAndClose() {
       let data = {
         name: this.name,
         lasting: this.lasting
       }
-      axios.create({baseURL: this.baseUrl}).post('/punishment', data)
-      window.location.reload();
-      this.$emit('updateParent', {
-        dialog: false
-      })
-    },
-    doSomething() {
-      let data = {
+      if (this.flagEdit) {
+        data = {
+          id: this.item.id,
+          name: this.name,
+          lasting: this.lasting
+        }
+        axios.create({baseURL: this.baseUrl}).put('/punishment/' + this.item.id, data)
+            .then(window.location.reload())
+      } else {
+        axios.create({baseURL: this.baseUrl}).post('/punishment', data)
+            .then(window.location.reload())
+      }
+      data = {
         dialog: false,
         error: false
       }
       this.$emit('updateParent', {
-        data
+        dialog: false
       })
     },
+      doSomething() {
+        let data = {
+          dialog: false,
+          error: false
+        }
+        this.$emit('updateParent', {
+          data
+        })
+      },
+    checkAndFill(item) {
+      if (item != null) {
+        axios.create({
+          baseURL: this.baseUrl
+        }).get('/punishment/' + item.id).then(resp => {
+          this.name = resp.data.name
+          this.lasting = resp.data.lasting
+        })
+      }
+    }
+    },
+    beforeMount() {
+      this.checkAndFill(this.item)
+    }
   }
-}
 </script>
 
 <style scoped>

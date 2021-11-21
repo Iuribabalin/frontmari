@@ -54,14 +54,32 @@ export default {
     rating: '',
     baseUrl: 'http://localhost:10511'
   }),
+  props: {
+    item: null,
+    flagEdit: Boolean,
+  },
   methods: {
     saveAndClose() {
       let data = {
         name: this.name,
         rating: this.rating
       }
-      axios.create({baseURL: this.baseUrl}).post('/source', data)
-      window.location.reload();
+      if (this.flagEdit) {
+        data = {
+          id: this.item.id,
+          name: this.name,
+          rating: this.rating
+        }
+        axios.create({baseURL: this.baseUrl}).put('/source/' + this.item.id, data)
+            .then(window.location.reload())
+      } else {
+        axios.create({baseURL: this.baseUrl}).post('/source', data)
+            .then(window.location.reload())
+      }
+      data = {
+        dialog: false,
+        error: false
+      }
       this.$emit('updateParent', {
         dialog: false
       })
@@ -75,6 +93,19 @@ export default {
         data
       })
     },
+    checkAndFill(item) {
+      if (item != null) {
+        axios.create({
+          baseURL: this.baseUrl
+        }).get('/source/' + item.id).then(resp => {
+          this.name = resp.data.name
+          this.rating = resp.data.rating
+        })
+      }
+    }
+  },
+  beforeMount() {
+    this.checkAndFill(this.item)
   }
 }
 </script>

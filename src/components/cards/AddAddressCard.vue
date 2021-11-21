@@ -59,6 +59,10 @@ export default {
     house: '',
     baseUrl: 'http://localhost:10511'
   }),
+  props: {
+    item: null,
+    flagEdit: Boolean,
+  },
     methods: {
       saveAndClose() {
         let data = {
@@ -66,8 +70,19 @@ export default {
           street: this.street,
           house: this.house
         }
-        axios.create({baseURL: this.baseUrl}).post('/address', data)
-        .then(window.location.reload())
+        if (this.flagEdit) {
+          data = {
+            id: this.item.id,
+            city: this.city,
+            street: this.street,
+            house: this.house,
+          }
+          axios.create({baseURL: this.baseUrl}).put('/address/' + this.item.id, data)
+              .then(window.location.reload())
+        } else {
+          axios.create({baseURL: this.baseUrl}).post('/address', data)
+              .then(window.location.reload())
+        }
         data = {
           dialog: false,
           error: false
@@ -85,7 +100,21 @@ export default {
           data
         })
       },
-  }
+      checkAndFill(item) {
+        if (item != null) {
+          axios.create({
+            baseURL: this.baseUrl
+          }).get('/address/' + item.id).then(resp => {
+            this.city = resp.data.city
+            this.street = resp.data.street
+            this.house = resp.data.house
+          })
+        }
+      }
+  },
+  beforeMount() {
+    this.checkAndFill(this.item)
+  },
 }
 </script>
 

@@ -69,6 +69,10 @@ export default {
     checkbox: false,
     baseUrl:'http://localhost:10511'
   }),
+  props: {
+    item: null,
+    flagEdit: Boolean,
+  },
   methods: {
     saveAndClose() {
       this.findInMass(this.selectHuman, this.humans)
@@ -78,17 +82,18 @@ export default {
         cash: this.money,
         police: this.checkbox
       }
-      console.log(data.money)
-      axios
-          .create({baseURL: this.baseUrl})
-          .post('/client', data)
-          .then(
-              resp => {
-                console.log(resp)
-
-                window.location.reload();
-              }
-          )
+      if (this.flagEdit) {
+        data = {
+          human_id: human_id,
+          cash: this.money,
+          police: this.checkbox
+        }
+        axios.create({baseURL: this.baseUrl}).put('/client/' + this.item.id, data)
+            .then(window.location.reload())
+      } else {
+        axios.create({baseURL: this.baseUrl}).post('/client', data)
+            .then(window.location.reload())
+      }
       data = {
         dialog: false,
         error: false
@@ -116,6 +121,17 @@ export default {
         }
       })
     },
+    checkAndFill(item) {
+      if (item != null) {
+        axios.create({
+          baseURL: this.baseUrl
+        }).get('/client/' + item.id).then(resp => {
+          this.checkbox = resp.data.police
+          this.money = resp.data.cash
+          this.selectHuman = resp.data.human.name + " " + resp.data.human.surname
+        })
+      }
+    },
     findInMass(findName, mass) {
       for (let i = 0; i < mass.length; i++) {
         if (mass[i] == findName) {
@@ -127,6 +143,7 @@ export default {
   },
     beforeMount() {
       this.getDataFromHumanList()
+      this.checkAndFill(this.item)
   }
 }
 </script>

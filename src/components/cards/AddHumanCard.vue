@@ -147,7 +147,7 @@ export default {
   },
   beforeMount() {
     this.checkAndFill(this.item)
-  },
+  }
 }
 </script>
 
