@@ -101,7 +101,7 @@ export default {
           profession: this.profession
         }
         axios.create({baseURL: this.baseUrl}).put('/human/' + this.item.id, data)
-            .then(getTableInfo())
+            .then(window.location.reload())
       } else {
         axios.create({baseURL: this.baseUrl}).post('/human', data)
             .then(window.location.reload())
