@@ -46,13 +46,26 @@ export default {
     name: '',
     baseUrl: 'http://localhost:10511'
   }),
+  props: {
+    item: null,
+    flagEdit: Boolean,
+  },
   methods: {
     saveAndClose() {
       let data = {
         name: this.name
       }
-      axios.create({baseURL: this.baseUrl}).post('/crimetype', data)
-          .then(window.location.reload())
+      if (this.flagEdit) {
+        data = {
+          id: this.item.id,
+          name: this.name
+        }
+        axios.create({baseURL: this.baseUrl}).put('/crimetype/' + this.item.id, data)
+            .then(window.location.reload())
+      } else {
+        axios.create({baseURL: this.baseUrl}).post('/crimetype', data)
+            .then(window.location.reload())
+      }
       data = {
         dialog: false,
         error: false
@@ -70,6 +83,18 @@ export default {
         data
       })
     },
+    checkAndFill(item) {
+      if (item != null) {
+        axios.create({
+          baseURL: this.baseUrl
+        }).get('/crimetype/' + item.id).then(resp => {
+          this.name = resp.data.name
+        })
+      }
+    }
+  },
+  beforeMount() {
+    this.checkAndFill(this.item)
   }
 }
 </script>
