@@ -51,6 +51,10 @@ export default {
     errorFlag: false,
     baseUrl: 'http://localhost:10511'
   }),
+  props: {
+    item: null,
+    flagEdit: Boolean,
+  },
   methods: {
     saveAndClose() {
       this.findInMass(this.selectHuman, this.humans)
@@ -61,29 +65,55 @@ export default {
         human_id: human_id,
         address_id: address_id
       }
-      axios
-          .create({baseURL: this.baseUrl})
-          .post('/performer', data)
-          .then(
-              resp => {
-                console.log(resp)
-                data = {
-                  dialog: false,
-                  error: false
+      if (this.flagEdit) {
+        axios
+            .create({baseURL: this.baseUrl})
+            .put('/performer/' + this.item.id, data)
+            .then(
+                resp => {
+                  console.log(resp)
+                  data = {
+                    dialog: false,
+                    error: false
+                  }
+                  window.location.reload();
                 }
-                 window.location.reload();
+            )
+            .catch(error => {
+              console.log("error start: " + error)
+              data = {
+                dialog: false,
+                error: true
               }
-          )
-          .catch(error  => {
-            console.log ("error start: " + error)
-            data = {
-              dialog: false,
-              error: true
-            }
-            this.$emit('updateParent', {
-              data: data,
+              this.$emit('updateParent', {
+                data: data,
+              })
             })
-          })
+      } else {
+        axios
+            .create({baseURL: this.baseUrl})
+            .post('/performer', data)
+            .then(
+                resp => {
+                  console.log(resp)
+                  data = {
+                    dialog: false,
+                    error: false
+                  }
+                  window.location.reload();
+                }
+            )
+            .catch(error => {
+              console.log("error start: " + error)
+              data = {
+                dialog: false,
+                error: true
+              }
+              this.$emit('updateParent', {
+                data: data,
+              })
+            })
+      }
       this.$emit('updateParent', {
         data: data,
       })
@@ -125,11 +155,22 @@ export default {
           break;
         }
       }
+    },
+    checkAndFill(item) {
+      if (item != null) {
+        axios.create({
+          baseURL: this.baseUrl
+        }).get('/performer/' + item.id).then(resp => {
+          this.selectHuman = resp.data.human.name + " " + resp.data.human.surname
+          this.selectAddress = resp.data.address.city + " " + resp.data.address.street + " " + resp.data.address.house
+        })
+      }
     }
   },
   beforeMount() {
     this.getDataFromHumanList()
     this.getDataFromAddressList()
+    this.checkAndFill(this.item)
   },
 }
 </script>
