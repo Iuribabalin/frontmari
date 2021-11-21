@@ -4,8 +4,8 @@
       <NavigationBar/>
     </v-col>
     <v-col cols="max">
-      <AppBar :nav_context=this.nav_context :nowStatusButton=this.nowStatusButton @updateParent="statusButton"></AppBar>
-      <Table :headersProps="this.headers" :urlProps="this.url" :nav_context=this.nav_context v-show="headers"></Table>
+      <AppBar :nav_context=this.nav_context :nowStatusButton=this.nowStatusButton @updateParent="statusButton"/>
+      <Table  :headersProps="this.headers" :urlProps="this.url" :nav_context=this.nav_context :editFlag="this.addFlag" v-show="headers"/>
     </v-col>
   </v-row>
 </template>
@@ -45,14 +45,16 @@ export default {
   methods: {
     statusButton(newState) {
       this.nowStatusButton = newState.data.statusButton
-      if (this.nowStatusButton) {
+      this.error = newState.data.error
+      if (this.nowStatusButton && !this.addFlag) {
+        this.addFlag = true
         this.headers.push({text: 'Actions', value: 'actions', sortable: false})
       }
-      if(!this.nowStatusButton){
+      if (!this.nowStatusButton && this.addFlag) {
+        this.addFlag = false
         this.headers.pop()
       }
-      console.log(this.headers)
-    }
+    },
   }
 }
 </script>

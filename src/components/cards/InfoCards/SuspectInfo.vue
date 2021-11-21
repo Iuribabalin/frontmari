@@ -4,24 +4,15 @@
       Extra information
     </v-card-title>
     <v-card-text class="text-h6 mb-1 text--primary">
-      Human Info:
+      Suspect
       <v-spacer/>
-      {{ info.human ? info.human.name : '' }} {{ info.human ? info.human.surname : '' }}
+      Appearance: {{ info.appearance ? info.appearance : '' }}
       <v-spacer/>
-      Age: {{ info.human ? info.human.age : '' }}
+      Name: {{ info.human.name ? info.human.name : '' }} {{ info.human.surname ? info  .human.surname : '' }}
       <v-spacer/>
-      Gender: {{ info.human ? info.human.gender : '' }}
+      Profession: {{ info.human.profession ? info.human.profession : '' }}
       <v-spacer/>
-      Profession: {{ info.human ? info.human.profession : '' }}
-    </v-card-text>
-    <v-card-text class="text-h6 mb-1 text--primary">
-      Address Info:
-      <v-spacer/>
-      City: {{ info.address ? info.address.city : '' }}
-      <v-spacer/>
-      Street: {{ info.address ? info.address.street : '' }}
-      <v-spacer/>
-      House: {{ info.address ? info.address.house : '' }}
+      Criminal: {{ info.criminal.toString() ? info.criminal.toString() : '' }}
     </v-card-text>
     <v-divider></v-divider>
 

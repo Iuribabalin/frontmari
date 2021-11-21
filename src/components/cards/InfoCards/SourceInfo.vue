@@ -4,24 +4,9 @@
       Extra information
     </v-card-title>
     <v-card-text class="text-h6 mb-1 text--primary">
-      Human Info:
+      Name: {{ info.name ? info.name : '' }}
       <v-spacer/>
-      {{ info.human ? info.human.name : '' }} {{ info.human ? info.human.surname : '' }}
-      <v-spacer/>
-      Age: {{ info.human ? info.human.age : '' }}
-      <v-spacer/>
-      Gender: {{ info.human ? info.human.gender : '' }}
-      <v-spacer/>
-      Profession: {{ info.human ? info.human.profession : '' }}
-    </v-card-text>
-    <v-card-text class="text-h6 mb-1 text--primary">
-      Address Info:
-      <v-spacer/>
-      City: {{ info.address ? info.address.city : '' }}
-      <v-spacer/>
-      Street: {{ info.address ? info.address.street : '' }}
-      <v-spacer/>
-      House: {{ info.address ? info.address.house : '' }}
+      Rating: {{ info.rating ? info.rating : '' }}
     </v-card-text>
     <v-divider></v-divider>
 

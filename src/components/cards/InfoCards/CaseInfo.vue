@@ -4,24 +4,22 @@
       Extra information
     </v-card-title>
     <v-card-text class="text-h6 mb-1 text--primary">
-      Human Info:
+      <p>Address:
+      {{ info.aCase.address ? info.aCase.address.city : '' }}
+      {{ info.aCase.address ? info.aCase.address.street : '' }}
+      {{ info.aCase.address ? info.aCase.address.house : '' }}
+      </p>
       <v-spacer/>
-      {{ info.human ? info.human.name : '' }} {{ info.human ? info.human.surname : '' }}
+      Client Info:
       <v-spacer/>
-      Age: {{ info.human ? info.human.age : '' }}
+      Name: {{ info.aCase.client.human.name ? info.aCase.client.human.name : '' }}
+      {{ info.aCase.client.human.surname ? info.aCase.client.human.surname : '' }}
       <v-spacer/>
-      Gender: {{ info.human ? info.human.gender : '' }}
+      Profession: {{ info.aCase.client.human.profession ? info.aCase.client.human.profession : '' }}
       <v-spacer/>
-      Profession: {{ info.human ? info.human.profession : '' }}
-    </v-card-text>
-    <v-card-text class="text-h6 mb-1 text--primary">
-      Address Info:
+      Cash: {{ info.aCase.client.cash ? info.aCase.client.cash : '' }}
       <v-spacer/>
-      City: {{ info.address ? info.address.city : '' }}
-      <v-spacer/>
-      Street: {{ info.address ? info.address.street : '' }}
-      <v-spacer/>
-      House: {{ info.address ? info.address.house : '' }}
+      Start Date: {{ info.aCase.start_date ? info.aCase.start_date : 'no date' }}
     </v-card-text>
     <v-divider></v-divider>
 

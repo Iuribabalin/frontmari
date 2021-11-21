@@ -4,15 +4,8 @@
       Extra information
     </v-card-title>
     <v-card-text class="text-h6 mb-1 text--primary">
-      {{ info ? info.name : '' }} {{ info ? info.surname : '' }}
-      <v-spacer/>
-      Age: {{ info ? info.age : '' }}
-      <v-spacer/>
-      Gender: {{ info ? info.gender : '' }}
-      <v-spacer/>
-      Profession: {{ info ? info.profession : '' }}
+      Name: {{ info.name ? info.name : '' }}
     </v-card-text>
-
     <v-divider></v-divider>
 
     <v-card-actions>

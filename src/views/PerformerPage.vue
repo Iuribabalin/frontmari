@@ -6,7 +6,7 @@
     <v-col cols="max">
       <AppBar :nav_context=this.nav_context :nowStatusButton=this.nowStatusButton @updateParent="statusButton"></AppBar>
       <AlertCard :error-text="this.errorText" v-if="error" @updateAlert="closeAlert"></AlertCard>
-      <Table :headersProps="this.headers" :urlProps="this.url" :nav_context=this.nav_context v-show="headers"></Table>
+      <Table  :headersProps="this.headers" :urlProps="this.url" :nav_context=this.nav_context :editFlag="this.addFlag" v-show="headers"/>
     </v-col>
   </v-row>
 </template>
@@ -61,7 +61,6 @@ export default {
       }
     },
     closeAlert(flag) {
-      console.log(flag.flag)
       this.error = flag.flag
     }
   },
