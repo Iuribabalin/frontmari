@@ -1,5 +1,6 @@
 <template>
   <v-data-table
+      @click:row="swithFlag"
       :headers="this.headers"
       :items="desserts"
       :items-per-page="5"
@@ -8,6 +9,7 @@
           'items-per-page-options': [10, 20, 30, -1]
       }"
   >
+    <DialogInfoTable :dialog="this.dialog"></DialogInfoTable>
     <template v-slot:item.actions="{ item }">
       <DialogFromTable :nav_context="nav_context" :item="item"/>
       <v-icon
@@ -23,16 +25,18 @@
 <script>
 import axios from "axios";
 import DialogFromTable from "@/components/DialogFromTable";
+import DialogInfoTable from "./DialogInfoTable";
 
 export default {
   name: "Table",
-  components: {DialogFromTable},
+  components: {DialogInfoTable, DialogFromTable},
   props: {
     headersProps: [],
     urlProps: String,
     nav_context: String,
   },
   data: () => ({
+    dialog: false,
     headers: [],
     desserts: [],
     renderComponent: true,
@@ -54,6 +58,10 @@ export default {
       }).delete(this.urlProps + "/" + item.id)
           .then(window.location.reload())
     },
+    swithFlag: function (){
+      this.dialog = !this.dialog
+      console.log(this.dialog)
+    }
   },
 
   beforeMount() {
