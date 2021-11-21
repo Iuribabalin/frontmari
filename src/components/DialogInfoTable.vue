@@ -2,16 +2,18 @@
   <v-dialog v-model="dialog" persistent max-width="600px">
 
     <HumanInfo v-if="nav_context === 'main'" :info="this.data" @updateDialog="changeDialog"/>
+    <PerformerInfo v-if="nav_context === 'performer'" :info="this.data" @updateDialog="changeDialog"/>
   </v-dialog>
 </template>
 
 <script>
 import axios from "axios";
 import HumanInfo from "./cards/InfoCards/HumanInfo";
+import PerformerInfo from "./cards/InfoCards/PerformerInfo";
 
 export default {
   name: "DialogInfoTable",
-  components: {HumanInfo},
+  components: {HumanInfo, PerformerInfo},
   props: {
     item: null,
     urlProps: String,
