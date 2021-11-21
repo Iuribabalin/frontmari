@@ -4,8 +4,8 @@
       <NavigationBar/>
     </v-col>
     <v-col cols="max">
-      <AppBar :nav_context=this.nav_context :nowStatusButton=this.nowStatusButton @updateParent="statusButton"></AppBar>
-      <Table  :headersProps="this.headers" :urlProps="this.url" :nav_context=this.nav_context v-show="headers"></Table>
+      <AppBar :nav_context=this.nav_context :nowStatusButton=this.nowStatusButton @updateParent="statusButton"/>
+      <Table  :headersProps="this.headers" :urlProps="this.url" :nav_context=this.nav_context :editFlag="this.addFlag" v-show="headers"/>
     </v-col>
   </v-row>
 </template>

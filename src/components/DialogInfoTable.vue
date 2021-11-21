@@ -1,38 +1,21 @@
 <template>
   <v-dialog v-model="dialog" persistent max-width="600px">
-    <v-card>
-      <v-card-title class="text-h5 grey lighten-2">
-        Extra information
-      </v-card-title>
 
-      <v-card-text>
-        {{ data }}
-      </v-card-text>
-
-      <v-divider></v-divider>
-
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn
-            color="primary"
-            text
-            @click="changeDialog"
-        >
-          Close
-        </v-btn>
-      </v-card-actions>
-    </v-card>
+    <HumanInfo v-if="nav_context === 'main'" :info="this.data" @updateDialog="changeDialog"/>
   </v-dialog>
 </template>
 
 <script>
 import axios from "axios";
+import HumanInfo from "./cards/InfoCards/HumanInfo";
 
 export default {
   name: "DialogInfoTable",
+  components: {HumanInfo},
   props: {
     item: null,
     urlProps: String,
+    nav_context: String
   },
   data: () => ({
     dialog: true,

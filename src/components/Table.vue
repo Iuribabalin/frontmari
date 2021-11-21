@@ -1,6 +1,7 @@
 <template>
   <div>
-    <DialogInfoTable v-if="dialog" :item="this.item" :urlProps="this.urlProps" @changeFlag="swithFlag"></DialogInfoTable>
+    <DialogInfoTable v-if="dialog" :item="this.item" :urlProps="this.urlProps" :nav_context="nav_context"
+                     @changeFlag="swithFlag"/>
     <v-data-table
         @click:row="swithFlag"
         :headers="this.headers"
@@ -36,6 +37,7 @@ export default {
     headersProps: [],
     urlProps: String,
     nav_context: String,
+    editFlag: Boolean
   },
   data: () => ({
     item: null,
@@ -62,15 +64,15 @@ export default {
           .then(window.location.reload())
     },
     swithFlag: function (row) {
-      this.item = row
-      this.dialog = !this.dialog
-      console.log(this.dialog)
+      if (!this.editFlag) {
+        this.item = row
+        this.dialog = !this.dialog
+      }
     }
   },
 
   beforeMount() {
     this.getTableInfo()
-
   },
 }
 </script>
