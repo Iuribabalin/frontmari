@@ -72,16 +72,53 @@ export default {
     selectCrimeType: '',
     selectPunishment: '',
     selectCase: '',
+    mainCase: [],
+    mainHuman: [],
+    mainPunishment: [],
+    mainCrimetype: [],
     baseUrl: 'http://localhost:10511'
   }),
+  props: {
+    item: null,
+    flagEdit: Boolean,
+  },
   methods: {
-    save() {
-      console.log(this.selectHuman)
+    saveAndClose() {
+      this.findInMass(this.selectHuman, this.humans)
+      let human_id = this.mainHuman[this.findIndex].id
+      this.findInMass(this.selectCase, this.cases)
+      let case_id = this.mainCase[this.findIndex].id
+      this.findInMass(this.selectCrimeType, this.crimetypes)
+      let crimetype_id = this.mainCrimetype[this.findIndex].id
+      this.findInMass(this.selectPunishment, this.punishments)
+      let punishment_id = this.mainPunishment[this.findIndex].id
+      let data = {
+        human_id: human_id,
+        case_id: case_id,
+        crimetype_id: crimetype_id,
+        punishment_id: punishment_id
+      }
+      if (this.flagEdit) {
+        data = {
+          human_id: human_id,
+          case_id: case_id,
+          crimetype_id: crimetype_id,
+          punishment_id: punishment_id
+        }
+        axios.create({baseURL: this.baseUrl}).put('/criminal' + this.item.id, data)
+            .then(window.location.reload())
+      } else {
+        axios.create({baseURL: this.baseUrl}).post('/criminal', data)
+            .then(window.location.reload())
+      }
+      data = {
+        dialog: false,
+        error: false
+      }
       this.$emit('updateParent', {
-        dialog: false
+        data: data,
       })
     },
-
     doSomething() {
       let data = {
         dialog: false,
@@ -95,6 +132,7 @@ export default {
       axios.create({
         baseURL: this.baseUrl
       }).get('/case').then(resp => {
+        this.mainCase = resp.data;
         for (let i = 0; i < resp.data.length; i++) {
           this.cases.push(resp.data[i].caseName)
         }
@@ -104,8 +142,9 @@ export default {
       axios.create({
         baseURL: this.baseUrl
       }).get('/human').then(resp => {
+        this.mainHuman = resp.data;
         for (let i = 0; i < resp.data.length; i++) {
-          this.humans.push(resp.data[i].name)
+          this.humans.push(resp.data[i].name + " " + resp.data[i].surname)
         }
       })
     },
@@ -113,6 +152,7 @@ export default {
       axios.create({
         baseURL: this.baseUrl
       }).get('/crimetype').then(resp => {
+        this.mainCrimetype = resp.data;
         for (let i = 0; i < resp.data.length; i++) {
           this.crimetypes.push(resp.data[i].name)
         }
@@ -122,17 +162,39 @@ export default {
       axios.create({
         baseURL: this.baseUrl
       }).get('/punishment').then(resp => {
+        this.mainPunishment = resp.data;
         for (let i = 0; i < resp.data.length; i++) {
           this.punishments.push(resp.data[i].name)
         }
       })
     },
+    findInMass(findName, mass) {
+      for (let i = 0; i < mass.length; i++) {
+        if (mass[i] == findName) {
+          this.findIndex = i;
+          break;
+        }
+      }
+    },
+    checkAndFill(item) {
+      if (item != null) {
+        axios.create({
+          baseURL: this.baseUrl
+        }).get('/criminal/' + item.id).then(resp => {
+          this.selectCase = resp.data.c.name
+          this.selectHuman = resp.data.human.name + " " + resp.data.human.surname
+          this.selectCrimeType = resp.data.crimetype.name
+          this.selectPunishment = resp.data.punishment.name
+        })
+      }
+    }
   },
   beforeMount() {
     this.getDataFromHumanList()
     this.getDataFromPunishmentList()
     this.getDataFromCrimeTypeList()
     this.getDataFromCaseList()
+    this.checkAndFill(this.item)
   }
 }
 </script>

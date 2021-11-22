@@ -19,7 +19,7 @@
     <AddSourceCard v-if="this.nav_context === 'source'" @updateParent="updateDialog"/>
     <AddPunishmentCard v-if="this.nav_context === 'punishment'" @updateParent="updateDialog"/>
     <AddCrimeTypeCard v-if="this.nav_context === 'crimetype'" @updateParent="updateDialog"/>
-    <CriminalCard v-if="this.nav_context === 'criminal'" @updateParent="updateDialog"/>
+    <AddCriminalCard v-if="this.nav_context === 'criminal'" @updateParent="updateDialog"/>
   </v-dialog>
 </template>
 
@@ -34,7 +34,7 @@ import AddEvidenceCard from "@/components/cards/AddEvidenceCard";
 import AddSourceCard from "@/components/cards/AddSourceCard";
 import AddPunishmentCard from "@/components/cards/AddPunishmentCard";
 import AddCrimeTypeCard from "@/components/cards/AddCrimeTypeCard";
-import CriminalCard from "@/components/cards/CriminalCard";
+import AddCriminalCard from "@/components/cards/AddCriminalCard";
 
 export default {
   name: "Dialog",
@@ -49,7 +49,7 @@ export default {
     AddSourceCard,
     AddPunishmentCard,
     AddCrimeTypeCard,
-    CriminalCard
+    AddCriminalCard
   },
   props: {
     nav_context: String,

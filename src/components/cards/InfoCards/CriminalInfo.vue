@@ -1,12 +1,17 @@
 <template>
   <v-card>
     <v-card-title class="text-h5 grey lighten-2">
-      Extra information
+      Extra information about criminal
     </v-card-title>
     <v-card-text class="text-h6 mb-1 text--primary">
-      Criminal name: {{ info.c.name ? info.c.name : '' }}
       <v-spacer/>
-      Start date: {{ info.c.start_date ? info.c.start_date : 'no date' }} End date: {{ info.c.end_date ? info.c.end_date : 'no date' }}
+      Name: {{ info.human.name ? info.human.name : '' }} {{ info.human.surname ? info.human.surname : '' }}
+      <p></p><p>Case info:</p>
+      Case name: {{ info.c.name ? info.c.name : '' }}
+      <v-spacer/>
+      Start date: {{ info.c.start_date ? info.c.start_date : 'no date' }}
+      <v-spacer/>
+      End date: {{ info.c.end_date ? info.c.end_date : 'no date' }}
       <v-spacer/>
       Address: {{ info.c.address ? info.c.address.city : '' }} {{ info.c.address ? info.c.address.street : '' }}
       {{ info.c.address ? info.c.address.house : '' }}
@@ -16,12 +21,10 @@
       <v-spacer/>
       Cash: {{ info.c.client.cash ? info.c.client.cash : '' }}
       <v-spacer/>
+      <p></p>
       Criminal Type: {{ info.crimeType.name ? info.crimeType.name : '' }}
       <v-spacer/>
-      Human: {{ info.human.name ? info.human.name : '' }} {{ info.human.surname ? info.human.surname : '' }}
-      <v-spacer/>
-      Punishment:
-      <v-spacer/>
+      <p></p><p>Punishment info: </p>
       Name: {{ info.punishment.name ? info.punishment.name : '' }}
       <v-spacer/>
       Lasting: {{ info.punishment.lasting ? info.punishment.lasting : '' }}

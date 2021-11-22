@@ -9,6 +9,8 @@
       <p>
         Age: {{ info.human.age ? info.human.age : '' }}
         <v-spacer/>
+        Gender: {{ info.human.gender===true ? 'woman' : 'man' }}
+        <v-spacer/>
         Profession: {{ info.human.profession ? info.human.profession : '' }}
         <v-spacer/>
         Cash: {{ info.cash ? info.cash : '' }}

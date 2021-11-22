@@ -4,14 +4,16 @@
       Extra information
     </v-card-title>
     <v-card-text class="text-h6 mb-1 text--primary">
-      <p>Evidence</p>
+      <p>Evidence info:</p>
       Evidence name: {{ info.evid_name ? info.evid_name : '' }}
     </v-card-text>
     <v-card-text class="text-h6 mb-1 text--primary">
-      <p>Criminal</p>
-      Criminal name: {{ info.c.name ? info.c.name : '' }}
+      <p>Case info:</p>
+      Case name: {{ info.c.name ? info.c.name : '' }}
       <v-spacer/>
-      Start date: {{ info.c.start_date ? info.c.start_date : 'no date' }} End date: {{ info.c.end_date ? info.c.end_date : 'no date' }}
+      Start date: {{ info.c.start_date ? info.c.start_date : 'no date' }}
+      <v-spacer/>
+      End date: {{ info.c.end_date ? info.c.end_date : 'no date' }}
       <v-spacer/>
       Address: {{ info.c.address ? info.c.address.city : '' }} {{ info.c.address ? info.c.address.street : '' }}
       {{ info.c.address ? info.c.address.house : '' }}
@@ -22,10 +24,12 @@
       Cash: {{ info.c.client.cash ? info.c.client.cash : '' }}
     </v-card-text>
     <v-card-text class="text-h6 mb-1 text--primary">
-      <p>Suspect</p>
+      <p>Suspect info:</p>
       <v-spacer/>
-      {{ info.suspect.human.name ? info.suspect.human.name : '' }}
+      Suspect name: {{ info.suspect.human.name ? info.suspect.human.name : '' }}
       {{ info.suspect.human.surname ? info.suspect.human.surname : '' }}
+      <v-spacer/>
+      is criminal: {{ info.suspect.criminal===true ? 'no' : 'yes' }}
     </v-card-text>
     <v-divider></v-divider>
 

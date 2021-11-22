@@ -65,7 +65,7 @@ export default {
     selectCase:'',
     selectSuspect:'',
     mainCases: [],
-    mainSuspects: [],
+    mainSuspect: [],
     baseUrl:'http://localhost:10511'
   }),
   props: {
@@ -101,6 +101,15 @@ export default {
       }
       this.$emit('updateParent', {
         data: data,
+      })
+    },
+    doSomething() {
+      let data = {
+        dialog: false,
+        error: false
+      }
+      this.$emit('updateParent', {
+        data
       })
     },
     getDataFromCaseList() {
