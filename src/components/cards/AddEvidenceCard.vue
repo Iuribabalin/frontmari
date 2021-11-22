@@ -64,19 +64,50 @@ export default {
     suspects:[],
     selectCase:'',
     selectSuspect:'',
+    mainCases: [],
+    mainSuspects: [],
     baseUrl:'http://localhost:10511'
   }),
+  props: {
+    item: null,
+    flagEdit: Boolean,
+  },
   methods: {
-    save() {
-      console.log(this.selectCase)
+    saveAndClose() {
+      this.findInMass(this.selectSuspect, this.suspects)
+      let suspect_id = this.mainSuspect[this.findIndex].id
+      this.findInMass(this.selectCase, this.cases)
+      let case_id = this.mainCase[this.findIndex].id
+      let data = {
+        suspect_id: suspect_id,
+        case_id: case_id,
+        evid_name: this.name
+      }
+      if (this.flagEdit) {
+        data = {
+          suspect_id: suspect_id,
+          case_id: case_id,
+          evid_name: this.name
+        }
+        axios.create({baseURL: this.baseUrl}).put('/evidence/' + this.item.id, data)
+            .then(window.location.reload())
+      } else {
+        axios.create({baseURL: this.baseUrl}).post('/evidence', data)
+            .then(window.location.reload())
+      }
+      data = {
+        dialog: false,
+        error: false
+      }
       this.$emit('updateParent', {
-        dialog: false
+        data: data,
       })
     },
     getDataFromCaseList() {
       axios.create({
         baseURL: this.baseUrl
       }).get('/case').then(resp => {
+        this.mainCase = resp.data;
         for (let i = 0; i < resp.data.length; i++) {
           this.cases.push(resp.data[i].caseName)
         }
@@ -86,15 +117,36 @@ export default {
       axios.create({
         baseURL: this.baseUrl
       }).get('/suspect').then(resp => {
+        this.mainSuspect = resp.data;
         for (let i = 0; i < resp.data.length; i++) {
           this.suspects.push(resp.data[i].name)
         }
       })
+    },
+    findInMass(findName, mass) {
+      for (let i = 0; i < mass.length; i++) {
+        if (mass[i] == findName) {
+          this.findIndex = i;
+          break;
+        }
+      }
+    },
+    checkAndFill(item) {
+      if (item != null) {
+        axios.create({
+          baseURL: this.baseUrl
+        }).get('/evidence/' + item.id).then(resp => {
+          this.name = resp.data.evid_name
+          this.selectCase = resp.data.c.name
+          this.selectSuspect = resp.data.suspect.human.name + " " + resp.data.suspect.human.surname
+        })
+      }
     }
   },
   beforeMount() {
     this.getDataFromCaseList()
     this.getDataFromSuspectList()
+    this.checkAndFill(this.item)
   }
 }
 </script>
