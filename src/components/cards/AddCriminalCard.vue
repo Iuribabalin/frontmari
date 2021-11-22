@@ -10,24 +10,24 @@
             <v-select
                 label="Human"
                 :items="humans"
-                v-model = "selectHuman"
+                v-model="selectHuman"
             ></v-select>
             <v-select
-            label="Type of crime"
-            :items="crimetypes"
-            v-model = "selectCrimeType"
+                label="Type of crime"
+                :items="crimetypes"
+                v-model="selectCrimeType"
             ></v-select>
           </v-col>
           <v-col>
             <v-select
                 label="Punishment"
                 :items="punishments"
-                v-model = "selectPunishment"
+                v-model="selectPunishment"
             ></v-select>
             <v-select
                 label="Case"
                 :items="cases"
-                v-model = "selectCase"
+                v-model="selectCase"
             ></v-select>
           </v-col>
         </v-row>
@@ -95,17 +95,17 @@ export default {
       let data = {
         human_id: human_id,
         case_id: case_id,
-        crimetype_id: crimetype_id,
+        crimeType_id: crimetype_id,
         punishment_id: punishment_id
       }
       if (this.flagEdit) {
         data = {
           human_id: human_id,
           case_id: case_id,
-          crimetype_id: crimetype_id,
+          crimeType_id: crimetype_id,
           punishment_id: punishment_id
         }
-        axios.create({baseURL: this.baseUrl}).put('/criminal' + this.item.id, data)
+        axios.create({baseURL: this.baseUrl}).put('/criminal/' + this.item.id, data)
             .then(window.location.reload())
       } else {
         axios.create({baseURL: this.baseUrl}).post('/criminal', data)
@@ -134,7 +134,9 @@ export default {
       }).get('/case').then(resp => {
         this.mainCase = resp.data;
         for (let i = 0; i < resp.data.length; i++) {
-          this.cases.push(resp.data[i].caseName)
+          if (resp.data[i].finish == null) {
+            this.cases.push(resp.data[i].caseName)
+          }
         }
       })
     },
@@ -184,7 +186,7 @@ export default {
           this.selectCase = resp.data.c.name
           this.selectHuman = resp.data.human.name + " " + resp.data.human.surname
           this.selectCrimeType = resp.data.crimetype.name
-          this.selectPunishment = resp.data.punishment.name
+          this.selectPunishment = resp.data.punishment.name ? resp.data.punishment.name :'fffffooooo'
         })
       }
     }
