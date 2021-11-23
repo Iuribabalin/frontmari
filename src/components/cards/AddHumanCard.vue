@@ -115,7 +115,10 @@ export default {
             profession: this.profession
           }
           axios.create({baseURL: this.baseUrl}).put('/human/' + this.item.id, data)
-              .then(window.location.reload())
+              .then(resp => {
+                console.log(resp.data)
+                window.location.reload()
+              })
               .catch(err => {
                 let data = {
                   errorText: err.response.data.message.toString(),
@@ -128,7 +131,10 @@ export default {
               })
         } else {
           axios.create({baseURL: this.baseUrl}).post('/human', data)
-              .then(window.location.reload())
+              .then(resp => {
+                console.log(resp.data)
+                window.location.reload()
+              })
               .catch(err => {
                 let data = {
                   errorText: err.response.data.message.toString(),

@@ -58,9 +58,8 @@ export default {
   methods: {
     updateDialog(data) {
       this.dialog = data.data.dialog
-      let outData = data.data
       this.$emit('updateParent', {
-        outData
+        data: data.data
       })
     }
   }

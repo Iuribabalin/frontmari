@@ -6,7 +6,8 @@
     <v-col cols="max">
       <AppBar :nav_context=this.nav_context :nowStatusButton=this.nowStatusButton @updateParent="statusButton"></AppBar>
       <AlertCard :error-text="this.errorText" v-if="error" @updateAlert="closeAlert"></AlertCard>
-      <Table  :headersProps="this.headers" :urlProps="this.url" :nav_context=this.nav_context :editFlag="this.addFlag" v-show="headers"/>
+      <Table  :headersProps="this.headers" :urlProps="this.url" :nav_context=this.nav_context :editFlag="this.addFlag" v-show="headers"
+              @updateParent="statusButton"/>
     </v-col>
   </v-row>
 </template>
@@ -43,12 +44,13 @@ export default {
         value: 'profession'
       },
     ],
-    addFlag: false,
     error: false,
-    errorText: "Ошибка в добавлении нового элемента",
+    errorText: "",
+    addFlag: false,
   }),
   methods: {
     statusButton(newState) {
+      this.errorText = newState.data.errorText
       this.nowStatusButton = newState.data.statusButton
       this.error = newState.data.error
       if (this.nowStatusButton && !this.addFlag) {
@@ -62,7 +64,7 @@ export default {
     },
     closeAlert(flag) {
       this.error = flag.flag
-    }
+    },
   },
 }
 </script>

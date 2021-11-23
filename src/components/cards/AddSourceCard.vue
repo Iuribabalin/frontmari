@@ -78,12 +78,39 @@ export default {
             rating: this.rating
           }
           axios.create({baseURL: this.baseUrl}).put('/source/' + this.item.id, data)
-              .then(window.location.reload())
+              .then(resp => {
+                console.log(resp.data)
+                window.location.reload()
+              })
+              .catch(err => {
+                let data = {
+                  errorText: err.response.data.message.toString(),
+                  dialog: false,
+                  error: true
+                }
+                this.$emit('updateParent', {
+                  data
+                })
+              })
         } else {
           axios.create({baseURL: this.baseUrl}).post('/source', data)
-              .then(window.location.reload())
+              .then(resp => {
+                console.log(resp.data)
+                window.location.reload()
+              })
+              .catch(err => {
+                let data = {
+                  errorText: err.response.data.message.toString(),
+                  dialog: false,
+                  error: true
+                }
+                this.$emit('updateParent', {
+                  data
+                })
+              })
         }
         data = {
+          errorText: '',
           dialog: false,
           error: false
         }
@@ -94,6 +121,7 @@ export default {
     },
     doSomething() {
       let data = {
+        errorText: '',
         dialog: false,
         error: false
       }

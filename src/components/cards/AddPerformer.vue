@@ -78,58 +78,52 @@ export default {
           axios
               .create({baseURL: this.baseUrl})
               .put('/performer/' + this.item.id, data)
-              .then(
-                  resp => {
-                    console.log(resp)
-                    data = {
-                      dialog: false,
-                      error: false
-                    }
-                    window.location.reload();
-                  }
-              )
-              .catch(error => {
-                console.log("error start: " + error)
-                data = {
+              .then(resp => {
+                console.log(resp.data)
+                window.location.reload()
+              })
+              .catch(err => {
+                let data = {
+                  errorText: err.response.data.message.toString(),
                   dialog: false,
                   error: true
                 }
                 this.$emit('updateParent', {
-                  data: data,
+                  data
                 })
               })
         } else {
           axios
               .create({baseURL: this.baseUrl})
               .post('/performer', data)
-              .then(
-                  resp => {
-                    console.log(resp)
-                    data = {
-                      dialog: false,
-                      error: false
-                    }
-                    window.location.reload();
-                  }
-              )
-              .catch(error => {
-                console.log("error start: " + error)
-                data = {
+              .then(resp => {
+                console.log(resp.data)
+                window.location.reload()
+              })
+              .catch(err => {
+                let data = {
+                  errorText: err.response.data.message.toString(),
                   dialog: false,
                   error: true
                 }
                 this.$emit('updateParent', {
-                  data: data,
+                  data
                 })
               })
         }
+        data = {
+          errorText: '',
+          dialog: false,
+          error: false
+        }
         this.$emit('updateParent', {
-          data: data,
+          data
         })
       }
     },
     doSomething() {
       let data = {
+        errorText: '',
         dialog: false,
         error: false
       }

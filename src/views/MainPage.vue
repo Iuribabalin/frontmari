@@ -33,6 +33,7 @@ export default {
       {text: 'Gender', value: 'gender'},
       {text: 'Profession', value: 'profession'},
     ],
+    addFlag: false,
     error: false,
     errorText: ""
   }),

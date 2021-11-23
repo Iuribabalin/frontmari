@@ -110,12 +110,14 @@ export default {
           })
     },
     update(data){
-      let outData = data.data
+      console.log("Data table")
+      console.log(data.data)
       this.$emit('updateParent', {
-        outData
+        data: data.data
       })
     },
   },
+
 
   beforeMount() {
     this.getTableInfo()

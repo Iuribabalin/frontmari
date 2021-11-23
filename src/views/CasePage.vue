@@ -52,6 +52,7 @@ export default {
         value: 'finish'
       },
     ],
+    addFlag: false,
     error: false,
     errorText: ""
   }),
