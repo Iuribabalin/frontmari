@@ -8,6 +8,8 @@
         :items="desserts"
         :items-per-page="5"
         item-key="name"
+        :sort-by="this.headers[0].value"
+        :sort-desc="false"
         :footer-props="{
           'items-per-page-options': [10, 20, 30, -1]
       }"
