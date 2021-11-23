@@ -5,6 +5,7 @@
     </v-col>
     <v-col cols="max">
       <AppBar :nav_context=this.nav_context :nowStatusButton=this.nowStatusButton @updateParent="statusButton"/>
+      <AlertCard :error-text="this.errorText" v-if="error" @updateAlert="closeAlert"></AlertCard>
       <Table  :headersProps="this.headers" :urlProps="this.url" :nav_context=this.nav_context :editFlag="this.addFlag" v-show="headers"/>
     </v-col>
   </v-row>
@@ -14,10 +15,11 @@
 import NavigationBar from "@/components/NavigationBar";
 import AppBar from "@/components/AppBar";
 import Table from "@/components/Table";
+import AlertCard from "../components/alerts/AlertCard";
 
 export default {
   name: "PunishmentPage",
-  components: {AppBar, Table, NavigationBar},
+  components: {AlertCard, AppBar, Table, NavigationBar},
   data: () => ({
     url: '/punishment',
     nav_context: 'punishment',

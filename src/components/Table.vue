@@ -70,6 +70,16 @@ export default {
         baseURL: this.baseUrl
       }).delete(this.urlProps + "/" + item.id)
           .then(window.location.reload())
+          .catch(error => {
+            let data = {
+              errorText: error.data(),
+              dialog: false,
+              error: false
+            }
+            this.$emit('updateParent', {
+              data
+            })
+          })
     },
     swithFlag: function (row) {
       if (!this.editFlag) {

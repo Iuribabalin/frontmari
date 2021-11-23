@@ -5,7 +5,9 @@
     </v-col>
     <v-col cols="max">
       <AppBar :nav_context=this.nav_context :nowStatusButton=this.nowStatusButton @updateParent="statusButton"/>
-      <Table  :headersProps="this.headers" :urlProps="this.url" :nav_context=this.nav_context :editFlag="this.addFlag" v-show="headers"/>
+      <AlertCard :error-text="this.errorText" v-if="error" @updateAlert="closeAlert"></AlertCard>
+      <Table  :headersProps="this.headers" :urlProps="this.url" :nav_context=this.nav_context :editFlag="this.addFlag" v-show="headers"
+              @updateParent="statusButton"/>
     </v-col>
   </v-row>
 </template>
@@ -30,9 +32,12 @@ export default {
       {text: 'Gender', value: 'gender'},
       {text: 'Profession', value: 'profession'},
     ],
+    error: false,
+    errorText: ""
   }),
   methods: {
     statusButton(newState) {
+      this.errorText = newState.data.errorText
       this.nowStatusButton = newState.data.statusButton
       this.error = newState.data.error
       if (this.nowStatusButton && !this.addFlag) {
@@ -44,7 +49,10 @@ export default {
         this.headers.pop()
       }
     },
-  }
+    closeAlert(flag) {
+      this.error = flag.flag
+    },
+  },
 }
 </script>
 
