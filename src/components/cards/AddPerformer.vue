@@ -81,6 +81,14 @@ export default {
               .then(resp => {
                 console.log(resp.data)
                 window.location.reload()
+                data = {
+                  errorText: '',
+                  dialog: false,
+                  error: false
+                }
+                this.$emit('updateParent', {
+                  data
+                })
               })
               .catch(err => {
                 let data = {
@@ -99,6 +107,14 @@ export default {
               .then(resp => {
                 console.log(resp.data)
                 window.location.reload()
+                data = {
+                  errorText: '',
+                  dialog: false,
+                  error: false
+                }
+                this.$emit('updateParent', {
+                  data
+                })
               })
               .catch(err => {
                 let data = {
@@ -111,14 +127,6 @@ export default {
                 })
               })
         }
-        data = {
-          errorText: '',
-          dialog: false,
-          error: false
-        }
-        this.$emit('updateParent', {
-          data
-        })
       }
     },
     doSomething() {

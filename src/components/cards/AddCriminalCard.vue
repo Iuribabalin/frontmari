@@ -118,42 +118,53 @@ export default {
               .then(resp => {
                 console.log(resp.data)
                 window.location.reload()
+                data = {
+                  errorText: '',
+                  dialog: false,
+                  error: false
+                }
+                this.$emit('updateParent', {
+                  data: data,
+                })
               })
               .catch(err => {
-                let data = {
+                console.log(err)
+                let errData = {
                   errorText: err.response.data.message.toString(),
                   dialog: false,
                   error: true
                 }
+                console.log(errData)
                 this.$emit('updateParent', {
-                  data
+                  data: errData
                 })
+                console.log(errData)
               })
         } else {
           axios.create({baseURL: this.baseUrl}).post('/criminal', data)
               .then(resp => {
                 console.log(resp.data)
                 window.location.reload()
+                data = {
+                  errorText: '',
+                  dialog: false,
+                  error: false
+                }
+                this.$emit('updateParent', {
+                  data: data,
+                })
               })
               .catch(err => {
-                let data = {
+                let errData = {
                   errorText: err.response.data.message.toString(),
                   dialog: false,
                   error: true
                 }
                 this.$emit('updateParent', {
-                  data
+                  data: errData
                 })
               })
         }
-        data = {
-          errorText: '',
-          dialog: false,
-          error: false
-        }
-        this.$emit('updateParent', {
-          data: data,
-        })
       }
     },
     doSomething() {
@@ -172,9 +183,7 @@ export default {
       }).get('/case').then(resp => {
         this.mainCase = resp.data;
         for (let i = 0; i < resp.data.length; i++) {
-          if (resp.data[i].finish == null) {
             this.cases.push(resp.data[i].caseName)
-          }
         }
       })
     },
@@ -224,7 +233,7 @@ export default {
           this.selectCase = resp.data.c.name
           this.selectHuman = resp.data.human.name + " " + resp.data.human.surname
           this.selectCrimeType = resp.data.crimeType.name
-          this.selectPunishment = resp.data.punishment.name ? resp.data.punishment.name :'fffffooooo'
+          this.selectPunishment = resp.data.punishment.name ? resp.data.punishment.name : ' '
         })
       }
     }
