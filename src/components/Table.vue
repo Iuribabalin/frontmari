@@ -22,6 +22,12 @@
         >
           mdi-delete
         </v-icon>
+        <v-icon v-if="$route.path === '/case'"
+                small
+                @click="endCase(item)"
+        >
+          mdi-close-thick
+        </v-icon>
       </template>
     </v-data-table>
   </div>
@@ -70,6 +76,12 @@ export default {
         this.item = row
         this.dialog = !this.dialog
       }
+    },
+    endCase: function (item) {
+      axios.create({
+        baseURL: this.baseUrl
+      }).get(this.urlProps + "/end/" + item.id)
+          .then(window.location.reload())
     }
   },
 
