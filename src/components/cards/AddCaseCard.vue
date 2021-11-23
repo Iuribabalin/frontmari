@@ -16,7 +16,7 @@
             <v-select
                 label="Client"
                 :items="clients"
-                v-model = "selectClient"
+                v-model="selectClient"
                 :rules="clearFieldValid"
             ></v-select>
             <v-select
@@ -43,7 +43,7 @@
             <v-select
                 label="Address"
                 :items="addresses"
-                v-model = "selectAddress"
+                v-model="selectAddress"
                 :rules="clearFieldValid"
             ></v-select>
             <v-select
@@ -88,10 +88,10 @@ import axios from "axios";
 export default {
   name: "AddCaseCard",
   data: () => ({
-    clients:[],
-    addresses:[],
-    selectClient:'',
-    selectAddress:'',
+    clients: [],
+    addresses: [],
+    selectClient: '',
+    selectAddress: '',
     name: '',
     findIndex: 0,
     indexes: [],
@@ -103,7 +103,7 @@ export default {
     selectSources: [],
     sources: [],
     mainSources: [],
-    baseUrl:'http://localhost:10511',
+    baseUrl: 'http://localhost:10511',
     clearFieldValid: [
       v => !!v || 'Field is required'
     ],
@@ -116,7 +116,7 @@ export default {
   methods: {
 
     saveAndClose() {
-      if(this.$refs.form.validate()) {
+      if (this.$refs.form.validate()) {
         this.findInMass(this.selectClient, this.clients)
         let client_id = this.mainClients[this.findIndex].id
         this.findInMass(this.selectAddress, this.addresses)
@@ -147,12 +147,39 @@ export default {
             sources: sources
           }
           axios.create({baseURL: this.baseUrl}).put('/case/' + this.item.id, data)
-              .then(window.location.reload())
+              .then(resp => {
+                console.log(resp.data)
+                window.location.reload()
+              })
+              .catch(err => {
+                let data = {
+                  errorText: err.response.data.message.toString(),
+                  dialog: false,
+                  error: true
+                }
+                this.$emit('updateParent', {
+                  data
+                })
+              })
         } else {
           axios.create({baseURL: this.baseUrl}).post('/case', data)
-              .then(window.location.reload())
+              .then(resp => {
+                console.log(resp.data)
+                window.location.reload()
+              })
+              .catch(err => {
+                let data = {
+                  errorText: err.response.data.message.toString(),
+                  dialog: false,
+                  error: true
+                }
+                this.$emit('updateParent', {
+                  data
+                })
+              })
         }
         data = {
+          errorText:'',
           dialog: false,
           error: false
         }
@@ -163,6 +190,7 @@ export default {
     },
     doSomething() {
       let data = {
+        errorText:'',
         dialog: false,
         error: false
       }
@@ -180,32 +208,32 @@ export default {
         }
       })
     },
-    getDataFromAddressList(){
+    getDataFromAddressList() {
       axios.create({
         baseURL: this.baseUrl
       }).get('/address').then(resp => {
         this.mainAddresses = resp.data;
-        for(let i = 0; i < resp.data.length; i++){
+        for (let i = 0; i < resp.data.length; i++) {
           this.addresses.push(resp.data[i].city + " " + resp.data[i].street + " " + resp.data[i].house)
         }
       })
     },
-    getDataFromPerformerList(){
+    getDataFromPerformerList() {
       axios.create({
         baseURL: this.baseUrl
       }).get('/performer').then(resp => {
         this.mainPerformers = resp.data;
-        for(let i = 0; i < resp.data.length; i++){
+        for (let i = 0; i < resp.data.length; i++) {
           this.performers.push(resp.data[i].name + " " + resp.data[i].surname)
         }
       })
     },
-    getDataFromSourceList(){
+    getDataFromSourceList() {
       axios.create({
         baseURL: this.baseUrl
       }).get('/source').then(resp => {
         this.mainSources = resp.data;
-        for(let i = 0; i < resp.data.length; i++){
+        for (let i = 0; i < resp.data.length; i++) {
           this.sources.push(resp.data[i].name)
         }
       })
@@ -231,7 +259,7 @@ export default {
         }
       }
     },
-    findArray(findName, mass){
+    findArray(findName, mass) {
       this.indexes = []
       for (let j = 0; j < findName.length; j++) {
         for (let i = 0; i < mass.length; i++) {

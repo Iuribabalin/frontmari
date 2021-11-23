@@ -94,7 +94,10 @@ export default {
       axios.create({
         baseURL: this.baseUrl
       }).get(this.urlProps + "/end/" + item.id)
-          .then(window.location.reload())
+          .then(resp => {
+            console.log(resp.data)
+            window.location.reload()
+          })
           .catch(err => {
             let data = {
               errorText: err.response.data.message.toString(),
