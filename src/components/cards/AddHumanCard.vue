@@ -85,8 +85,9 @@ export default {
       v => !!v || 'Field is required'
     ],
     numberValid: [
-        v => !!v || 'Field is required',
-        v => !!/^\d*$/.test(v) || 'Is not number'
+      v => !!v || 'Field is required',
+      v => !!/^\d*$/.test(v) || 'Is not number',
+      v => v < 100 || 'Is over age',
     ],
     valid: true,
   }),
@@ -96,7 +97,7 @@ export default {
   },
   methods: {
     saveAndClose() {
-      if(this.$refs.form.validate()) {
+      if (this.$refs.form.validate()) {
         let data = {
           name: this.name,
           surname: this.surname,
@@ -115,11 +116,32 @@ export default {
           }
           axios.create({baseURL: this.baseUrl}).put('/human/' + this.item.id, data)
               .then(window.location.reload())
+              .catch(err => {
+                let data = {
+                  errorText: err.response.data.message.toString(),
+                  dialog: false,
+                  error: true
+                }
+                this.$emit('updateParent', {
+                  data
+                })
+              })
         } else {
           axios.create({baseURL: this.baseUrl}).post('/human', data)
               .then(window.location.reload())
+              .catch(err => {
+                let data = {
+                  errorText: err.response.data.message.toString(),
+                  dialog: false,
+                  error: true
+                }
+                this.$emit('updateParent', {
+                  data
+                })
+              })
         }
         data = {
+          errorText: '',
           dialog: false,
           error: false
         }
@@ -130,6 +152,7 @@ export default {
     },
     doSomething() {
       let data = {
+        errorText: '',
         dialog: false,
         error: false
       }

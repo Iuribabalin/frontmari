@@ -15,7 +15,7 @@
       }"
     >
       <template v-slot:item.actions="{ item }">
-        <DialogFromTable :nav_context="nav_context" :item="item"/>
+        <DialogFromTable :nav_context="nav_context" :item="item" @updateParent="update"/>
         <v-icon
             small
             @click="deleteItem(item)"
@@ -69,12 +69,15 @@ export default {
       axios.create({
         baseURL: this.baseUrl
       }).delete(this.urlProps + "/" + item.id)
-          .then(window.location.reload())
-          .catch(error => {
+          .then(resp => {
+            console.log(resp.data)
+            window.location.reload()
+          })
+          .catch(err => {
             let data = {
-              errorText: error.data(),
+              errorText: err.response.data.message.toString(),
               dialog: false,
-              error: false
+              error: true
             }
             this.$emit('updateParent', {
               data
@@ -92,7 +95,23 @@ export default {
         baseURL: this.baseUrl
       }).get(this.urlProps + "/end/" + item.id)
           .then(window.location.reload())
-    }
+          .catch(err => {
+            let data = {
+              errorText: err.response.data.message.toString(),
+              dialog: false,
+              error: true
+            }
+            this.$emit('updateParent', {
+              data
+            })
+          })
+    },
+    update(data){
+      let outData = data.data
+      this.$emit('updateParent', {
+        outData
+      })
+    },
   },
 
   beforeMount() {
