@@ -223,7 +223,7 @@ export default {
         }).get('/criminal/' + item.id).then(resp => {
           this.selectCase = resp.data.c.name
           this.selectHuman = resp.data.human.name + " " + resp.data.human.surname
-          this.selectCrimeType = resp.data.crimetype.name
+          this.selectCrimeType = resp.data.crimeType.name
           this.selectPunishment = resp.data.punishment.name ? resp.data.punishment.name :'fffffooooo'
         })
       }
