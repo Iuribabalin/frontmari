@@ -1,5 +1,5 @@
 <template>
-  <v-form>
+  <v-form v-model="valid" lazy-validation ref="form">
     <v-card>
       <v-card-title>
         <span class="text-h5">User Profile</span>
@@ -11,10 +11,12 @@
                 label="Human"
                 :items="humans"
                 v-model = "selectHuman"
+                :rules="clearFieldValid"
             ></v-select>
             <v-text-field
                 v-model="money"
                 label="Money"
+                :rules="clearFieldValid"
             ></v-text-field>
           </v-col>
           <v-col>
@@ -67,7 +69,11 @@ export default {
     mainHumans: [],
     money: '',
     checkbox: false,
-    baseUrl:'http://localhost:10511'
+    baseUrl:'http://localhost:10511',
+    clearFieldValid: [
+      v => !!v || 'Field is required'
+    ],
+    valid: true,
   }),
   props: {
     item: null,
@@ -75,32 +81,34 @@ export default {
   },
   methods: {
     saveAndClose() {
-      this.findInMass(this.selectHuman, this.humans)
-      let human_id = this.mainHumans[this.findIndex].id
-      let data = {
-        human_id: human_id,
-        cash: this.money,
-        police: this.checkbox
-      }
-      if (this.flagEdit) {
-        data = {
+      if(this.$refs.form.validate()) {
+        this.findInMass(this.selectHuman, this.humans)
+        let human_id = this.mainHumans[this.findIndex].id
+        let data = {
           human_id: human_id,
           cash: this.money,
           police: this.checkbox
         }
-        axios.create({baseURL: this.baseUrl}).put('/client/' + this.item.id, data)
-            .then(window.location.reload())
-      } else {
-        axios.create({baseURL: this.baseUrl}).post('/client', data)
-            .then(window.location.reload())
+        if (this.flagEdit) {
+          data = {
+            human_id: human_id,
+            cash: this.money,
+            police: this.checkbox
+          }
+          axios.create({baseURL: this.baseUrl}).put('/client/' + this.item.id, data)
+              .then(window.location.reload())
+        } else {
+          axios.create({baseURL: this.baseUrl}).post('/client', data)
+              .then(window.location.reload())
+        }
+        data = {
+          dialog: false,
+          error: false
+        }
+        this.$emit('updateParent', {
+          data: data,
+        })
       }
-      data = {
-        dialog: false,
-        error: false
-      }
-      this.$emit('updateParent', {
-        data: data,
-      })
     },
     doSomething() {
       let data = {

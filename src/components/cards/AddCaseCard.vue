@@ -1,5 +1,5 @@
 <template>
-  <v-form>
+  <v-form v-model="valid" lazy-validation ref="form">
     <v-card>
       <v-card-title>
         <span class="text-h5">Case Profile</span>
@@ -7,29 +7,53 @@
       <v-card-text>
         <v-row>
           <v-col>
+            <v-text-field
+                v-model="name"
+                label="Case name"
+                :rules="clearFieldValid"
+                required
+            ></v-text-field>
             <v-select
                 label="Client"
                 :items="clients"
                 v-model = "selectClient"
+                :rules="clearFieldValid"
             ></v-select>
-            <v-text-field
-                v-model="name"
-                label="Case name"
-                required
-            ></v-text-field>
+            <v-select
+                v-model="selectSources"
+                :items="sources"
+
+                label="Sources"
+                multiple
+                clearable
+            >
+              <template v-slot:selection="{ item, index }">
+
+                <span v-if="index === 0">{{ item }}</span>
+                <span
+                    v-if="index === 1"
+                    class="grey--text text-caption"
+                >
+                  (+{{ selectSources.length - 1 }} others)
+                </span>
+              </template>
+            </v-select>
           </v-col>
           <v-col>
             <v-select
                 label="Address"
                 :items="addresses"
                 v-model = "selectAddress"
+                :rules="clearFieldValid"
             ></v-select>
             <v-select
                 v-model="selectPerformers"
+                :rules="clearFieldValid"
                 :items="performers"
                 label="Performers"
                 multiple
                 clearable
+
             ></v-select>
           </v-col>
         </v-row>
@@ -76,7 +100,14 @@ export default {
     selectPerformers: [],
     performers: [],
     mainPerformers: [],
-    baseUrl:'http://localhost:10511'
+    selectSources: [],
+    sources: [],
+    mainSources: [],
+    baseUrl:'http://localhost:10511',
+    clearFieldValid: [
+      v => !!v || 'Field is required'
+    ],
+    valid: true
   }),
   props: {
     item: null,
@@ -85,43 +116,51 @@ export default {
   methods: {
 
     saveAndClose() {
-      this.findInMass(this.selectClient, this.clients)
-      let client_id = this.mainClients[this.findIndex].id
-      this.findInMass(this.selectAddress, this.addresses)
-      let address_id = this.mainAddresses[this.findIndex].id
-      this.findArray(this.selectPerformers, this.performers)
-      let performers = [];
-      for (let i = 0; i < this.indexes.length; i++){
-        performers.push(this.mainPerformers[this.indexes[i]].id)
-      }
-      let data = {
-        client_id: client_id,
-        address_id: address_id,
-        name: this.name,
-        performers: performers
-      }
-      if (this.flagEdit) {
-        data = {
+      if(this.$refs.form.validate()) {
+        this.findInMass(this.selectClient, this.clients)
+        let client_id = this.mainClients[this.findIndex].id
+        this.findInMass(this.selectAddress, this.addresses)
+        let address_id = this.mainAddresses[this.findIndex].id
+        this.findArray(this.selectPerformers, this.performers)
+        let performers = [];
+        for (let i = 0; i < this.indexes.length; i++) {
+          performers.push(this.mainPerformers[this.indexes[i]].id)
+        }
+        this.findArray(this.selectSources, this.sources)
+        let sources = [];
+        for (let i = 0; i < this.indexes.length; i++) {
+          sources.push(this.mainSources[this.indexes[i]].id)
+        }
+        let data = {
           client_id: client_id,
           address_id: address_id,
           name: this.name,
-          performers: performers
+          performers: performers,
+          sources: sources
         }
-        axios.create({baseURL: this.baseUrl}).put('/case/' + this.item.id, data)
-            .then(window.location.reload())
-      } else {
-        axios.create({baseURL: this.baseUrl}).post('/case', data)
-            .then(window.location.reload())
+        if (this.flagEdit) {
+          data = {
+            client_id: client_id,
+            address_id: address_id,
+            name: this.name,
+            performers: performers,
+            sources: sources
+          }
+          axios.create({baseURL: this.baseUrl}).put('/case/' + this.item.id, data)
+              .then(window.location.reload())
+        } else {
+          axios.create({baseURL: this.baseUrl}).post('/case', data)
+              .then(window.location.reload())
+        }
+        data = {
+          dialog: false,
+          error: false
+        }
+        this.$emit('updateParent', {
+          data: data,
+        })
       }
-      data = {
-        dialog: false,
-        error: false
-      }
-      this.$emit('updateParent', {
-        data: data,
-      })
     },
-
     doSomething() {
       let data = {
         dialog: false,
@@ -161,6 +200,16 @@ export default {
         }
       })
     },
+    getDataFromSourceList(){
+      axios.create({
+        baseURL: this.baseUrl
+      }).get('/source').then(resp => {
+        this.mainSources = resp.data;
+        for(let i = 0; i < resp.data.length; i++){
+          this.sources.push(resp.data[i].name)
+        }
+      })
+    },
     checkAndFill(item) {
       if (item != null) {
         axios.create({
@@ -169,9 +218,8 @@ export default {
           this.name = resp.data.aCase.name
           this.selectClient = resp.data.aCase.client.human.name + " " + resp.data.aCase.client.human.surname
           this.selectAddress = resp.data.aCase.address.city + " " + resp.data.aCase.address.street + " " + resp.data.aCase.address.house
-          for (let i = 0; i < resp.data.listOfPerformers.length; i++){
-            this.selectPerformers.push(resp.data.listOfPerformers[i])
-          }
+          this.selectPerformers = resp.data.listOfPerformers
+          this.selectSources = resp.data.listOfSources
         })
       }
     },
@@ -184,6 +232,7 @@ export default {
       }
     },
     findArray(findName, mass){
+      this.indexes = []
       for (let j = 0; j < findName.length; j++) {
         for (let i = 0; i < mass.length; i++) {
           if (mass[i] === findName[j]) {
@@ -198,6 +247,7 @@ export default {
     this.getDataFromClientList()
     this.getDataFromAddressList()
     this.getDataFromPerformerList()
+    this.getDataFromSourceList()
     this.checkAndFill(this.item)
   }
 }

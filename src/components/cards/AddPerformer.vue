@@ -1,4 +1,5 @@
 <template>
+  <v-form v-model="valid" lazy-validation ref="form">
   <v-card>
     <v-card-title>
       <span class="text-h5">Performer Profile</span>
@@ -8,11 +9,13 @@
           label="Human"
           :items="humans"
           v-model="selectHuman"
+          :rules="clearFieldValid"
       ></v-select>
       <v-select
           label="Address"
           :items="addresses"
           v-model="selectAddress"
+          :rules="clearFieldValid"
       ></v-select>
     </v-card-text>
     <v-card-actions>
@@ -33,6 +36,7 @@
       </v-btn>
     </v-card-actions>
   </v-card>
+  </v-form>
 </template>
 
 <script>
@@ -49,7 +53,11 @@ export default {
     mainAddresses: [],
     findIndex: 0,
     errorFlag: false,
-    baseUrl: 'http://localhost:10511'
+    baseUrl: 'http://localhost:10511',
+    clearFieldValid: [
+      v => !!v || 'Field is required'
+    ],
+    valid: true,
   }),
   props: {
     item: null,
@@ -57,66 +65,68 @@ export default {
   },
   methods: {
     saveAndClose() {
-      this.findInMass(this.selectHuman, this.humans)
-      let human_id = this.mainHumans[this.findIndex].id
-      this.findInMass(this.selectAddress, this.addresses)
-      let address_id = this.mainAddresses[this.findIndex].id
-      let data = {
-        human_id: human_id,
-        address_id: address_id
-      }
-      if (this.flagEdit) {
-        axios
-            .create({baseURL: this.baseUrl})
-            .put('/performer/' + this.item.id, data)
-            .then(
-                resp => {
-                  console.log(resp)
-                  data = {
-                    dialog: false,
-                    error: false
+      if(this.$refs.form.validate()) {
+        this.findInMass(this.selectHuman, this.humans)
+        let human_id = this.mainHumans[this.findIndex].id
+        this.findInMass(this.selectAddress, this.addresses)
+        let address_id = this.mainAddresses[this.findIndex].id
+        let data = {
+          human_id: human_id,
+          address_id: address_id
+        }
+        if (this.flagEdit) {
+          axios
+              .create({baseURL: this.baseUrl})
+              .put('/performer/' + this.item.id, data)
+              .then(
+                  resp => {
+                    console.log(resp)
+                    data = {
+                      dialog: false,
+                      error: false
+                    }
+                    window.location.reload();
                   }
-                  window.location.reload();
+              )
+              .catch(error => {
+                console.log("error start: " + error)
+                data = {
+                  dialog: false,
+                  error: true
                 }
-            )
-            .catch(error => {
-              console.log("error start: " + error)
-              data = {
-                dialog: false,
-                error: true
-              }
-              this.$emit('updateParent', {
-                data: data,
+                this.$emit('updateParent', {
+                  data: data,
+                })
               })
-            })
-      } else {
-        axios
-            .create({baseURL: this.baseUrl})
-            .post('/performer', data)
-            .then(
-                resp => {
-                  console.log(resp)
-                  data = {
-                    dialog: false,
-                    error: false
+        } else {
+          axios
+              .create({baseURL: this.baseUrl})
+              .post('/performer', data)
+              .then(
+                  resp => {
+                    console.log(resp)
+                    data = {
+                      dialog: false,
+                      error: false
+                    }
+                    window.location.reload();
                   }
-                  window.location.reload();
+              )
+              .catch(error => {
+                console.log("error start: " + error)
+                data = {
+                  dialog: false,
+                  error: true
                 }
-            )
-            .catch(error => {
-              console.log("error start: " + error)
-              data = {
-                dialog: false,
-                error: true
-              }
-              this.$emit('updateParent', {
-                data: data,
+                this.$emit('updateParent', {
+                  data: data,
+                })
               })
-            })
+        }
+        this.$emit('updateParent', {
+          data: data,
+        })
       }
-      this.$emit('updateParent', {
-        data: data,
-      })
     },
     doSomething() {
       let data = {

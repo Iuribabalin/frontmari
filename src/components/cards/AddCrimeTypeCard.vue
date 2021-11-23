@@ -1,5 +1,5 @@
 <template>
-  <v-form>
+  <v-form v-model="valid" lazy-validation ref="form">
     <v-card>
       <v-card-title>
         <span class="text-h5">User Profile</span>
@@ -10,6 +10,7 @@
             <v-text-field
                 v-model="name"
                 label="Name"
+                :rules="clearFieldValid"
                 required
             ></v-text-field>
 
@@ -44,7 +45,11 @@ export default {
   name: "AddCrimeTypeCard",
   data: () => ({
     name: '',
-    baseUrl: 'http://localhost:10511'
+    baseUrl: 'http://localhost:10511',
+    clearFieldValid: [
+      v => !!v || 'Field is required'
+    ],
+    valid: true,
   }),
   props: {
     item: null,
@@ -52,27 +57,29 @@ export default {
   },
   methods: {
     saveAndClose() {
-      let data = {
-        name: this.name
-      }
-      if (this.flagEdit) {
-        data = {
-          id: this.item.id,
+      if(this.$refs.form.validate()) {
+        let data = {
           name: this.name
         }
-        axios.create({baseURL: this.baseUrl}).put('/crimetype/' + this.item.id, data)
-            .then(window.location.reload())
-      } else {
-        axios.create({baseURL: this.baseUrl}).post('/crimetype', data)
-            .then(window.location.reload())
+        if (this.flagEdit) {
+          data = {
+            id: this.item.id,
+            name: this.name
+          }
+          axios.create({baseURL: this.baseUrl}).put('/crimetype/' + this.item.id, data)
+              .then(window.location.reload())
+        } else {
+          axios.create({baseURL: this.baseUrl}).post('/crimetype', data)
+              .then(window.location.reload())
+        }
+        data = {
+          dialog: false,
+          error: false
+        }
+        this.$emit('updateParent', {
+          data
+        })
       }
-      data = {
-        dialog: false,
-        error: false
-      }
-      this.$emit('updateParent', {
-        data
-      })
     },
     doSomething() {
       let data = {

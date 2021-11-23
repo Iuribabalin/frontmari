@@ -85,6 +85,7 @@ export default {
       v => !!v || 'Field is required'
     ],
     numberValid: [
+        v => !!v || 'Field is required',
         v => !!/^\d*$/.test(v) || 'Is not number'
     ],
     valid: true,

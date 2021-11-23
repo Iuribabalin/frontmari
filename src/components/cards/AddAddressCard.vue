@@ -1,5 +1,5 @@
 <template>
-  <v-form>
+  <v-form v-model="valid" lazy-validation ref="form">
     <v-card>
       <v-card-title>
         <span class="text-h5">User Profile</span>
@@ -10,11 +10,13 @@
             <v-text-field
                 v-model="city"
                 label="City"
+                :rules="clearFieldValid"
                 required
             ></v-text-field>
             <v-text-field
                 v-model="house"
                 label="House"
+                :rules="numberValid"
                 required
             ></v-text-field>
           </v-col>
@@ -22,6 +24,7 @@
             <v-text-field
                 v-model="street"
                 label="Street"
+                :rules="clearFieldValid"
                 required
             ></v-text-field>
           </v-col>
@@ -57,7 +60,15 @@ export default {
     city: '',
     street: '',
     house: '',
-    baseUrl: 'http://localhost:10511'
+    baseUrl: 'http://localhost:10511',
+    clearFieldValid: [
+      v => !!v || 'Field is required'
+    ],
+    numberValid: [
+      v => !!v || 'Field is required',
+      v => !!/^\d*$/.test(v) || 'Is not number'
+    ],
+    valid: true,
   }),
   props: {
     item: null,
@@ -65,31 +76,33 @@ export default {
   },
     methods: {
       saveAndClose() {
-        let data = {
-          city: this.city,
-          street: this.street,
-          house: this.house
-        }
-        if (this.flagEdit) {
-          data = {
-            id: this.item.id,
+        if(this.$refs.form.validate()) {
+          let data = {
             city: this.city,
             street: this.street,
-            house: this.house,
+            house: this.house
           }
-          axios.create({baseURL: this.baseUrl}).put('/address/' + this.item.id, data)
-              .then(window.location.reload())
-        } else {
-          axios.create({baseURL: this.baseUrl}).post('/address', data)
-              .then(window.location.reload())
+          if (this.flagEdit) {
+            data = {
+              id: this.item.id,
+              city: this.city,
+              street: this.street,
+              house: this.house,
+            }
+            axios.create({baseURL: this.baseUrl}).put('/address/' + this.item.id, data)
+                .then(window.location.reload())
+          } else {
+            axios.create({baseURL: this.baseUrl}).post('/address', data)
+                .then(window.location.reload())
+          }
+          data = {
+            dialog: false,
+            error: false
+          }
+          this.$emit('updateParent', {
+            data
+          })
         }
-        data = {
-          dialog: false,
-          error: false
-        }
-        this.$emit('updateParent', {
-          data
-        })
       },
       doSomething() {
         let data = {
