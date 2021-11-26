@@ -29,9 +29,11 @@ export default {
     },
     errorUpdate(error){
       console.log("error to main: " + error.error)
+      console.log("error to main message: " + error.error)
       let data = {
         statusButton: false,
-        error: error.error
+        error: error.error,
+        errorText: error.errorText
       }
       this.goEmit(data)
     },

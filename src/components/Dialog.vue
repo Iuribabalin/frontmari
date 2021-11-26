@@ -61,8 +61,10 @@ export default {
     updateDialog(data) {
       this.dialog = data.data.dialog
       console.log("error state 2: " + data.data.error)
+      console.log("error state 2 message: " + data.data.errorText)
       this.$emit('updateParent', {
-        error: data.data.error
+        error: data.data.error,
+        errorText: data.data.errorText
       })
     }
   }

@@ -20,6 +20,7 @@
                 :rules="clearFieldValid"
             ></v-select>
             <v-select
+                v-if="flagEdit"
                 v-model="selectSources"
                 :items="sources"
 
@@ -178,14 +179,6 @@ export default {
                 })
               })
         }
-        data = {
-          errorText:'',
-          dialog: false,
-          error: false
-        }
-        this.$emit('updateParent', {
-          data: data,
-        })
       }
     },
     doSomething() {

@@ -129,14 +129,6 @@ export default {
                 })
               })
         }
-        data = {
-          errorText: '',
-          dialog: false,
-          error: false
-        }
-        this.$emit('updateParent', {
-          data: data,
-        })
       }
     },
     doSomething() {
