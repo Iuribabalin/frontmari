@@ -37,6 +37,7 @@
 import axios from "axios";
 import DialogFromTable from "@/components/DialogFromTable";
 import DialogInfoTable from "./DialogInfoTable";
+import VueCookies from 'vue-cookies';
 
 export default {
   name: "Table",
@@ -58,11 +59,13 @@ export default {
   methods: {
     getTableInfo: function () {
       axios.create({
-        baseURL: this.baseUrl
-      }).get(this.urlProps).then(resp => {
-        this.headers = this.headersProps
-        this.desserts = resp.data
-      })
+        baseURL: this.baseUrl,
+        timeout: 5000,
+      }).get(this.urlProps, {headers: {"Authorization": `Bearer ${VueCookies.get("token")}`}})
+          .then(resp => {
+            this.headers = this.headersProps
+            this.desserts = resp.data
+          })
     },
 
     deleteItem: function (item) {
@@ -109,7 +112,7 @@ export default {
             })
           })
     },
-    update(data){
+    update(data) {
       console.log("Data table")
       console.log(data.data)
       this.$emit('updateParent', {
