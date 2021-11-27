@@ -16,14 +16,14 @@
 import NavigationBar from "@/components/NavigationBar";
 import AppBar from "@/components/AppBar";
 import Table from "@/components/Table";
-import AlertCard from "../components/alerts/AlertCard";
+import AlertCard from "../../components/alerts/AlertCard";
 
 export default {
-  name: "CriminalPage",
+  name: "SuspectPage",
   components: {AlertCard, AppBar, Table, NavigationBar},
   data: () => ({
-    url: '/criminal',
-    nav_context: 'criminal',
+    url: '/suspect',
+    nav_context: 'suspect',
     nowStatusButton: false,
     headers: [
       {
@@ -36,20 +36,12 @@ export default {
         value: 'name'
       },
       {
-        text: 'Type of crime',
-        value: 'crimeType'
+        text: 'Appearance',
+        value: 'appearance'
       },
       {
-        text: 'Punishment',
-        value: 'punishmentName'
-      },
-      {
-        text: 'Until',
-        value: 'punishmentLasting'
-      },
-      {
-        text: 'Case',
-        value: 'aCase'
+        text: 'Is criminal',
+        value: 'is_criminal'
       },
     ],
     addFlag: false,
@@ -58,7 +50,6 @@ export default {
   }),
   methods: {
     statusButton(newState) {
-      console.log(newState)
       this.errorText = newState.data.errorText
       this.nowStatusButton = newState.data.statusButton
       this.error = newState.data.error

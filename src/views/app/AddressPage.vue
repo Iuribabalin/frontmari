@@ -11,19 +11,18 @@
     </v-col>
   </v-row>
 </template>
-
 <script>
 import NavigationBar from "@/components/NavigationBar";
 import AppBar from "@/components/AppBar";
 import Table from "@/components/Table";
-import AlertCard from "../components/alerts/AlertCard";
+import AlertCard from "../../components/alerts/AlertCard";
 
 export default {
-  name: "CrimeTypePage",
+  name: "AddressPage",
   components: {AlertCard, AppBar, Table, NavigationBar},
   data: () => ({
-    url: '/crimetype',
-    nav_context: 'crimetype',
+    url: '/address',
+    nav_context: 'address',
     nowStatusButton: false,
     headers: [
       {
@@ -32,13 +31,21 @@ export default {
         value: 'id',
       },
       {
-        text: 'Name',
-        value: 'name'
+        text: 'City',
+        value: 'city'
+      },
+      {
+        text: 'Street',
+        value: 'street'
+      },
+      {
+        text: 'House',
+        value: 'house'
       },
     ],
-    addFlag: false,
     error: false,
-    errorText: ""
+    errorText: "",
+    addFlag: false,
   }),
   methods: {
     statusButton(newState) {

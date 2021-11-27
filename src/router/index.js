@@ -6,58 +6,63 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
+    name: 'Auth',
+    component: () => import('../views/auth/AuthPage.vue')
+  },
+  {
+    path: '/main',
     name: 'Main',
-    component: () => import('../views/MainPage.vue')
+    component: () => import('../views/app/MainPage.vue')
   },
   {
     path: '/performer',
     name: 'Performer',
-    component: () => import('../views/PerformerPage.vue')
+    component: () => import('../views/app/PerformerPage.vue')
   },
   {
     path: '/case',
     name: 'Case',
-    component: () => import('../views/CasePage.vue')
+    component: () => import('../views/app/CasePage.vue')
   },
   {
     path: '/client',
     name: 'Client',
-    component: () => import('../views/ClientPage.vue')
+    component: () => import('../views/app/ClientPage.vue')
   },
   {
     path: '/address',
     name: 'Address',
-    component: () => import('../views/AddressPage.vue')
+    component: () => import('../views/app/AddressPage.vue')
   },
   {
     path: '/evidence',
     name: 'Evidence',
-    component: () => import('../views/EvidencePage.vue')
+    component: () => import('../views/app/EvidencePage.vue')
   },
   {
     path: '/suspect',
     name: 'Suspect',
-    component: () => import('../views/SuspectPage.vue')
+    component: () => import('../views/app/SuspectPage.vue')
   },
   {
     path: '/source',
     name: 'Source',
-    component: () => import('../views/SourcePage.vue')
+    component: () => import('../views/app/SourcePage.vue')
   },
   {
     path: '/criminal',
     name: 'Criminal',
-    component: () => import('../views/CriminalPage.vue')
+    component: () => import('../views/app/CriminalPage.vue')
   },
   {
     path: '/punishment',
     name: 'Punishment',
-    component: () => import('../views/PunishmentPage.vue')
+    component: () => import('../views/app/PunishmentPage.vue')
   },
   {
     path: '/crimetype',
     name: 'CrimeType',
-    component: () => import('../views/CrimeTypePage.vue')
+    component: () => import('../views/app/CrimeTypePage.vue')
   },
 ]
 

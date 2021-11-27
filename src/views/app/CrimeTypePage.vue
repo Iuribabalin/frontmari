@@ -16,14 +16,14 @@
 import NavigationBar from "@/components/NavigationBar";
 import AppBar from "@/components/AppBar";
 import Table from "@/components/Table";
-import AlertCard from "../components/alerts/AlertCard";
+import AlertCard from "../../components/alerts/AlertCard";
 
 export default {
-  name: "PunishmentPage",
+  name: "CrimeTypePage",
   components: {AlertCard, AppBar, Table, NavigationBar},
   data: () => ({
-    url: '/punishment',
-    nav_context: 'punishment',
+    url: '/crimetype',
+    nav_context: 'crimetype',
     nowStatusButton: false,
     headers: [
       {
@@ -34,10 +34,6 @@ export default {
       {
         text: 'Name',
         value: 'name'
-      },
-      {
-        text: 'Until',
-        value: 'lasting'
       },
     ],
     addFlag: false,

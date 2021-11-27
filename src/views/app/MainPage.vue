@@ -5,43 +5,33 @@
     </v-col>
     <v-col cols="max">
       <AppBar :nav_context=this.nav_context :nowStatusButton=this.nowStatusButton @updateParent="statusButton"/>
-      <AlertCard :error-text="this.errorText" v-if="error" @updateAlert="closeAlert"></AlertCard>
+      <AlertCard :error-text="this.errorText" v-if="this.error" @updateAlert="closeAlert"></AlertCard>
       <Table  :headersProps="this.headers" :urlProps="this.url" :nav_context=this.nav_context :editFlag="this.addFlag" v-show="headers"
               @updateParent="statusButton"/>
     </v-col>
   </v-row>
 </template>
+
 <script>
 import NavigationBar from "@/components/NavigationBar";
-import AppBar from "@/components/AppBar";
 import Table from "@/components/Table";
-import AlertCard from "../components/alerts/AlertCard";
+import AppBar from "@/components/AppBar";
+import AlertCard from "../../components/alerts/AlertCard";
 
 export default {
-  name: "ClientPage",
+  name: "MainPage",
   components: {AlertCard, AppBar, Table, NavigationBar},
   data: () => ({
-    url: '/client',
-    nav_context: 'client',
+    url: '/human',
+    nav_context: 'main',
     nowStatusButton: false,
     headers: [
-      {
-        text: 'Id',
-        align: 'start',
-        value: 'id',
-      },
-      {
-        text: 'Is police',
-        value: 'police'
-      },
-      {
-        text: 'Money',
-        value: 'money'
-      },
-      {
-        text: 'Name',
-        value: 'name'
-      },
+      {text: 'Id', align: 'start', value: 'id'},
+      {text: 'Name', value: 'name'},
+      {text: 'Surname', value: 'surname'},
+      {text: 'Age', value: 'age'},
+      {text: 'Gender', value: 'gender'},
+      {text: 'Profession', value: 'profession'},
     ],
     addFlag: false,
     error: false,
@@ -64,7 +54,7 @@ export default {
     closeAlert(flag) {
       this.error = flag.flag
     },
-  }
+  },
 }
 </script>
 

@@ -16,14 +16,14 @@
 import NavigationBar from "@/components/NavigationBar";
 import AppBar from "@/components/AppBar";
 import Table from "@/components/Table";
-import AlertCard from "../components/alerts/AlertCard";
+import AlertCard from "../../components/alerts/AlertCard";
 
 export default {
-  name: "EvidencePage",
+  name: "SourcePage",
   components: {AlertCard, AppBar, Table, NavigationBar},
   data: () => ({
-    url: '/evidence',
-    nav_context: 'evidence',
+    url: '/source',
+    nav_context: 'source',
     nowStatusButton: false,
     headers: [
       {
@@ -36,12 +36,8 @@ export default {
         value: 'name'
       },
       {
-        text: 'Case name',
-        value: 'caseName'
-      },
-      {
-        text: 'Suspect',
-        value: 'suspect'
+        text: 'Rating',
+        value: 'rating'
       },
     ],
     addFlag: false,
