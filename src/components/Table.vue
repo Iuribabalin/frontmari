@@ -61,7 +61,9 @@ export default {
       axios.create({
         baseURL: this.baseUrl,
         timeout: 5000,
-      }).get(this.urlProps, {headers: {"Authorization": `Bearer ${VueCookies.get("token")}`}})
+        headers: {
+          'Authorization': 'Bearer '+ VueCookies.get("token")}
+      }).get(this.urlProps)
           .then(resp => {
             this.headers = this.headersProps
             this.desserts = resp.data
