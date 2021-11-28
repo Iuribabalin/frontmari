@@ -7,11 +7,18 @@
       </v-icon>
       Edit
     </v-btn>
+    <v-btn color="red" outlined style="margin-right: 20px" @click="exit()">
+      <v-icon dark style="margin-right: 5px">
+        mdi-logout
+      </v-icon>
+      Logout
+    </v-btn>
   </v-app-bar>
 </template>
 
 <script>
 import Dialog from "@/components/Dialog";
+import VueCookies from "vue-cookies";
 export default {
   name: "AppBar",
   components: {Dialog},
@@ -41,6 +48,11 @@ export default {
       this.$emit('updateParent', {
         data
       })
+    },
+    exit() {
+      VueCookies.set('token' , '')
+      VueCookies.set('role' , '')
+      this.$router.push('/')
     }
   }
 }

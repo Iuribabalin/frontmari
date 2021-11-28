@@ -70,6 +70,7 @@
 
 <script>
 import axios from "axios";
+import VueCookies from "vue-cookies";
 
 export default {
   name: "AddHumanCard",
@@ -114,7 +115,10 @@ export default {
             gender: this.gender,
             profession: this.profession
           }
-          axios.create({baseURL: this.baseUrl}).put('/human/' + this.item.id, data)
+          axios.create({baseURL: this.baseUrl,
+            headers: {
+              'Authorization': 'Bearer '+ VueCookies.get("token")}
+          }).put('/human/' + this.item.id, data)
               .then(resp => {
                 console.log(resp.data)
                 window.location.reload()
@@ -130,7 +134,10 @@ export default {
                 })
               })
         } else {
-          axios.create({baseURL: this.baseUrl}).post('/human', data)
+
+          axios.create({baseURL: this.baseUrl, headers: {
+              'Authorization': 'Bearer '+ VueCookies.get("token")}
+          }).post('/human', data)
               .then(resp => {
                 console.log(resp.data)
                 window.location.reload()

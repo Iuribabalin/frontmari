@@ -1,10 +1,10 @@
 <template>
-  <v-row>
+  <v-row class="AuthPage">
     <v-col>
       <v-form v-model="valid" lazy-validation ref="form">
         <v-card max-width="500" max-height="400" class="card" outlined>
           <v-card-title>
-            <span class="text-h5">Authorization</span>
+            <span>Authorization</span>
           </v-card-title>
           <v-card-text>
             <v-text-field
@@ -30,7 +30,7 @@
       </v-form>
     </v-col>
     <v-col>
-      <img src="~@/resource/swp2.jpg" width="100%" style="margin-top: 8%"/>
+      <!--      <img src="~@/resource/swp2.jpg" width="100%" style="margin-top: 8%"/>-->
     </v-col>
   </v-row>
 </template>
@@ -63,6 +63,7 @@ export default {
               console.log(resp.data)
               if (resp.status === 200) {
                 VueCookies.set('token' , resp.data.token ? resp.data.token.toString() : '', "5h")
+                VueCookies.set('role' , resp.data.role ? resp.data.role.toString() : '', "5h")
                 this.$router.push('/main')
               }
             })
@@ -71,10 +72,21 @@ export default {
             })
       }
     }
+  },
+  created() {
+    document.querySelector("html").classList.add("AuthPage");
+  },
+  destroyed() {
+    document.querySelector("html").classList.remove("AuthPage");
   }
 }
 </script>
-
+<style>
+.AuthPage {
+  background-image:  url('~@/resource/sherlock.jpg');
+  background-size: 100%;
+}
+</style>
 <style scoped>
 .card {
   margin-right: auto;
