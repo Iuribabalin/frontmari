@@ -4,7 +4,7 @@
       <v-card-title>
         <span class="text-h5">Punishment</span>
       </v-card-title>
-      <v-card-text>
+      <v-card-text v-if="!blackList.includes(meRole)">
         <v-row>
           <v-col>
             <v-text-field
@@ -26,37 +26,31 @@
           </v-col>
         </v-row>
       </v-card-text>
-<!--      <v-card-text v-if="blackList.includes(meRole)">-->
-<!--        <span class="text-h5">No access to add</span>-->
-<!--      </v-card-text>-->
+      <v-card-text v-if="blackList.includes(meRole)">
+        <span class="text-h5">No access to add</span>
+      </v-card-text>
       <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn
-            color="blue darken-1"
-            text
-            @click="doSomething"
-        >
-          Close
-        </v-btn>
-<!--        <v-btn-->
-<!--            color="blue darken-1"-->
-<!--            text-->
-<!--            @click="saveAndClose"-->
-<!--            v-if="!blackList.includes(meRole)"-->
-<!--        >-->
-<!--          Save-->
-<!--        </v-btn>-->
-        <v-btn
-            color="blue darken-1"
-            text
-            @click="saveAndClose"
-        >
-          Save
-        </v-btn>
-      </v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+              color="blue darken-1"
+              text
+              @click="doSomething"
+          >
+            Close
+          </v-btn>
+          <v-btn
+              color="blue darken-1"
+              text
+              @click="saveAndClose"
+              v-if="!blackList.includes(meRole)"
+          >
+            Save
+          </v-btn>
+        </v-card-actions>
     </v-card>
   </v-form>
 </template>
+
 
 <script>
 import axios from "axios";
@@ -72,7 +66,7 @@ export default {
       v => !!v || 'Field is required'
     ],
     valid: true,
-    blackList: ["ROLE_SHERLOCK"],
+    blackList: ["ROLE_SHERLOCK", "ROLE_WATSON"],
     meRole: ''
   }),
   props: {
@@ -92,7 +86,8 @@ export default {
             name: this.name,
             lasting: this.lasting
           }
-          axios.create({baseURL: this.baseUrl}).put('/punishment/' + this.item.id, data)
+          axios.create({baseURL: this.baseUrl, headers: {
+              'Authorization': 'Bearer '+ VueCookies.get("token")}}).put('/punishment/' + this.item.id, data)
               .then(resp => {
                 console.log(resp.data)
                 window.location.reload()
@@ -108,7 +103,8 @@ export default {
                 })
               })
         } else {
-          axios.create({baseURL: this.baseUrl}).post('/punishment', data)
+          axios.create({baseURL: this.baseUrl, headers: {
+              'Authorization': 'Bearer '+ VueCookies.get("token")}}).post('/punishment', data)
               .then(resp => {
                 console.log(resp.data)
                 window.location.reload()

@@ -4,7 +4,7 @@
       <v-card-title>
         <span class="text-h5">User Profile</span>
       </v-card-title>
-      <v-card-text>
+      <v-card-text v-if="!blackList.includes(meRole)">
         <v-row>
           <v-col>
             <v-text-field
@@ -35,6 +35,9 @@
         </v-row>
 
       </v-card-text>
+      <v-card-text v-if="blackList.includes(meRole)">
+        <span class="text-h5">No access to add</span>
+      </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
@@ -48,6 +51,7 @@
             color="blue darken-1"
             text
             @click="saveAndClose"
+            v-if="!blackList.includes(meRole)"
         >
           Save
         </v-btn>
@@ -58,6 +62,7 @@
 
 <script>
 import axios from "axios";
+import VueCookies from "vue-cookies";
 
 export default {
   name: "AddEvidenceCard",
@@ -74,7 +79,8 @@ export default {
       v => !!v || 'Field is required'
     ],
     valid: true,
-    blackList: [],
+    blackList: ["ROLE_WATSON", "ROLE_LESTRADE"],
+    meRole: ''
   }),
   props: {
     item: null,
@@ -98,7 +104,8 @@ export default {
             case_id: case_id,
             evid_name: this.name
           }
-          axios.create({baseURL: this.baseUrl}).put('/evidence/' + this.item.id, data)
+          axios.create({baseURL: this.baseUrl, headers: {
+              'Authorization': 'Bearer '+ VueCookies.get("token")}}).put('/evidence/' + this.item.id, data)
               .then(resp => {
                 console.log(resp.data)
                 window.location.reload()
@@ -114,7 +121,8 @@ export default {
                 })
               })
         } else {
-          axios.create({baseURL: this.baseUrl}).post('/evidence', data)
+          axios.create({baseURL: this.baseUrl, headers: {
+              'Authorization': 'Bearer '+ VueCookies.get("token")}}).post('/evidence', data)
               .then(resp => {
                 console.log(resp.data)
                 window.location.reload()
@@ -144,7 +152,8 @@ export default {
     },
     getDataFromCaseList() {
       axios.create({
-        baseURL: this.baseUrl
+        baseURL: this.baseUrl, headers: {
+          'Authorization': 'Bearer '+ VueCookies.get("token")}
       }).get('/case').then(resp => {
         this.mainCase = resp.data;
         for (let i = 0; i < resp.data.length; i++) {
@@ -154,7 +163,8 @@ export default {
     },
     getDataFromSuspectList() {
       axios.create({
-        baseURL: this.baseUrl
+        baseURL: this.baseUrl, headers: {
+          'Authorization': 'Bearer '+ VueCookies.get("token")}
       }).get('/suspect').then(resp => {
         this.mainSuspect = resp.data;
         for (let i = 0; i < resp.data.length; i++) {
@@ -173,7 +183,8 @@ export default {
     checkAndFill(item) {
       if (item != null) {
         axios.create({
-          baseURL: this.baseUrl
+          baseURL: this.baseUrl, headers: {
+            'Authorization': 'Bearer '+ VueCookies.get("token")}
         }).get('/evidence/' + item.id).then(resp => {
           this.name = resp.data.evid_name
           this.selectCase = resp.data.c.name
@@ -183,6 +194,7 @@ export default {
     }
   },
   beforeMount() {
+    this.meRole = VueCookies.get("role")
     this.getDataFromCaseList()
     this.getDataFromSuspectList()
     this.checkAndFill(this.item)

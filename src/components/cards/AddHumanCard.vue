@@ -4,7 +4,7 @@
       <v-card-title>
         <span class="text-h5">User Profile</span>
       </v-card-title>
-      <v-card-text>
+      <v-card-text v-if="!blackList.includes(meRole)">
         <v-row>
           <v-col>
             <v-text-field
@@ -47,6 +47,9 @@
             required
         ></v-text-field>
       </v-card-text>
+      <v-card-text v-if="blackList.includes(meRole)">
+        <span class="text-h5">No access to add</span>
+      </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
@@ -60,6 +63,7 @@
             color="blue darken-1"
             text
             @click="saveAndClose"
+            v-if="!blackList.includes(meRole)"
         >
           Save
         </v-btn>
@@ -91,7 +95,8 @@ export default {
       v => v < 100 || 'Is over age',
     ],
     valid: true,
-    blackList: [],
+    blackList: ["ROLE_WATSON", "ROLE_LESTRADE"],
+    meRole: ''
   }),
   props: {
     item: null,
@@ -197,6 +202,7 @@ export default {
     }
   },
   beforeMount() {
+    this.meRole = VueCookies.get("role")
     this.checkAndFill(this.item)
   }
 }

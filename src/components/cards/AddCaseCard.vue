@@ -4,7 +4,7 @@
       <v-card-title>
         <span class="text-h5">Case Profile</span>
       </v-card-title>
-      <v-card-text>
+      <v-card-text v-if=" meRole!='ROLE_LESTRADE'">
         <v-row>
           <v-col>
             <v-text-field
@@ -16,14 +16,14 @@
             <v-select
                 label="Client"
                 :items="clients"
+                v-if=" meRole=='ROLE_SHERLOCK'"
                 v-model="selectClient"
                 :rules="clearFieldValid"
             ></v-select>
             <v-select
-                v-if="flagEdit"
                 v-model="selectSources"
                 :items="sources"
-
+                v-if="!blackList.includes(meRole) || meRole=='ROLE_WATSON'"
                 label="Sources"
                 multiple
                 clearable
@@ -44,6 +44,7 @@
             <v-select
                 label="Address"
                 :items="addresses"
+                v-if=" meRole=='ROLE_SHERLOCK'"
                 v-model="selectAddress"
                 :rules="clearFieldValid"
             ></v-select>
@@ -51,6 +52,7 @@
                 v-model="selectPerformers"
                 :rules="clearFieldValid"
                 :items="performers"
+                v-if=" meRole=='ROLE_SHERLOCK'"
                 label="Performers"
                 multiple
                 clearable
@@ -61,6 +63,9 @@
         <v-row>
         </v-row>
 
+      </v-card-text>
+      <v-card-text v-if="meRole=='ROLE_LESTRADE'">
+        <span class="text-h5">No access to add</span>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -75,6 +80,7 @@
             color="blue darken-1"
             text
             @click="saveAndClose"
+            v-if="!blackList.includes(meRole)"
         >
           Save
         </v-btn>
@@ -85,6 +91,7 @@
 
 <script>
 import axios from "axios";
+import VueCookies from "vue-cookies";
 
 export default {
   name: "AddCaseCard",
@@ -109,7 +116,8 @@ export default {
       v => !!v || 'Field is required'
     ],
     valid: true,
-    blackList: [],
+    blackList: ["ROLE_SHERLOCK", "ROLE_WATSON", "ROLE_LESTRADE"],
+    meRole: ''
   }),
   props: {
     item: null,
@@ -148,7 +156,8 @@ export default {
             performers: performers,
             sources: sources
           }
-          axios.create({baseURL: this.baseUrl}).put('/case/' + this.item.id, data)
+          axios.create({baseURL: this.baseUrl, headers: {
+              'Authorization': 'Bearer '+ VueCookies.get("token")}}).put('/case/' + this.item.id, data)
               .then(resp => {
                 console.log(resp.data)
                 window.location.reload()
@@ -164,7 +173,8 @@ export default {
                 })
               })
         } else {
-          axios.create({baseURL: this.baseUrl}).post('/case', data)
+          axios.create({baseURL: this.baseUrl, headers: {
+              'Authorization': 'Bearer '+ VueCookies.get("token")}}).post('/case', data)
               .then(resp => {
                 console.log(resp.data)
                 window.location.reload()
@@ -194,7 +204,8 @@ export default {
     },
     getDataFromClientList() {
       axios.create({
-        baseURL: this.baseUrl
+        baseURL: this.baseUrl, headers: {
+          'Authorization': 'Bearer '+ VueCookies.get("token")}
       }).get('/client').then(resp => {
         this.mainClients = resp.data;
         for (let i = 0; i < resp.data.length; i++) {
@@ -204,7 +215,8 @@ export default {
     },
     getDataFromAddressList() {
       axios.create({
-        baseURL: this.baseUrl
+        baseURL: this.baseUrl, headers: {
+          'Authorization': 'Bearer '+ VueCookies.get("token")}
       }).get('/address').then(resp => {
         this.mainAddresses = resp.data;
         for (let i = 0; i < resp.data.length; i++) {
@@ -214,7 +226,8 @@ export default {
     },
     getDataFromPerformerList() {
       axios.create({
-        baseURL: this.baseUrl
+        baseURL: this.baseUrl, headers: {
+          'Authorization': 'Bearer '+ VueCookies.get("token")}
       }).get('/performer').then(resp => {
         this.mainPerformers = resp.data;
         for (let i = 0; i < resp.data.length; i++) {
@@ -224,7 +237,8 @@ export default {
     },
     getDataFromSourceList() {
       axios.create({
-        baseURL: this.baseUrl
+        baseURL: this.baseUrl, headers: {
+          'Authorization': 'Bearer '+ VueCookies.get("token")}
       }).get('/source').then(resp => {
         this.mainSources = resp.data;
         for (let i = 0; i < resp.data.length; i++) {
@@ -235,7 +249,8 @@ export default {
     checkAndFill(item) {
       if (item != null) {
         axios.create({
-          baseURL: this.baseUrl
+          baseURL: this.baseUrl, headers: {
+            'Authorization': 'Bearer '+ VueCookies.get("token")}
         }).get('/case/' + item.id).then(resp => {
           this.name = resp.data.aCase.name
           this.selectClient = resp.data.aCase.client.human.name + " " + resp.data.aCase.client.human.surname
@@ -266,6 +281,7 @@ export default {
     }
   },
   beforeMount() {
+    this.meRole = VueCookies.get("role")
     this.getDataFromClientList()
     this.getDataFromAddressList()
     this.getDataFromPerformerList()

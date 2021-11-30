@@ -4,7 +4,7 @@
       <v-card-title>
         <span class="text-h5">User Profile</span>
       </v-card-title>
-      <v-card-text v-if="!blackList.includes()">
+      <v-card-text v-if="!blackList.includes(meRole)">
         <v-row>
           <v-col>
             <v-select
@@ -85,7 +85,7 @@ export default {
       v => !!v || 'Field is required'
     ],
     valid: true,
-    blackList: ["ROLE_SHERLOCK"],
+    blackList: ["ROLE_SHERLOCK", "ROLE_WATSON"],
     meRole: ''
   }),
   props: {

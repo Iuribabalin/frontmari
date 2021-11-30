@@ -64,7 +64,7 @@ export default {
       v => !!v || 'Field is required'
     ],
     valid: true,
-    blackList: ["ROLE_SHERLOCK"],
+    blackList: ["ROLE_SHERLOCK", "ROLE_LESTRADE"],
     meRole:''
   }),
   props: {
@@ -84,7 +84,8 @@ export default {
             name: this.name,
             rating: this.rating
           }
-          axios.create({baseURL: this.baseUrl}).put('/source/' + this.item.id, data)
+          axios.create({baseURL: this.baseUrl, headers: {
+              'Authorization': 'Bearer '+ VueCookies.get("token")}}).put('/source/' + this.item.id, data)
               .then(resp => {
                 console.log(resp.data)
                 window.location.reload()
@@ -100,7 +101,8 @@ export default {
                 })
               })
         } else {
-          axios.create({baseURL: this.baseUrl}).post('/source', data)
+          axios.create({baseURL: this.baseUrl, headers: {
+              'Authorization': 'Bearer '+ VueCookies.get("token")}}).post('/source', data)
               .then(resp => {
                 console.log(resp.data)
                 window.location.reload()
@@ -139,7 +141,8 @@ export default {
     checkAndFill(item) {
       if (item != null) {
         axios.create({
-          baseURL: this.baseUrl
+          baseURL: this.baseUrl, headers: {
+            'Authorization': 'Bearer '+ VueCookies.get("token")}
         }).get('/source/' + item.id).then(resp => {
           this.name = resp.data.name
           this.rating = resp.data.rating

@@ -4,7 +4,7 @@
       <v-card-title>
         <span class="text-h5">User Profile</span>
       </v-card-title>
-      <v-card-text>
+      <v-card-text v-if="!blackList.includes(meRole)">
         <v-row>
           <v-col>
             <v-text-field
@@ -16,6 +16,9 @@
 
           </v-col>
         </v-row>
+      </v-card-text>
+      <v-card-text v-if="blackList.includes(meRole)">
+        <span class="text-h5">No access to add</span>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -30,6 +33,7 @@
             color="blue darken-1"
             text
             @click="saveAndClose"
+            v-if="!blackList.includes(meRole)"
         >
           Save
         </v-btn>
@@ -40,6 +44,7 @@
 
 <script>
 import axios from "axios";
+import VueCookies from "vue-cookies";
 
 export default {
   name: "AddCrimeTypeCard",
@@ -50,7 +55,8 @@ export default {
       v => !!v || 'Field is required'
     ],
     valid: true,
-    blackList: [],
+    blackList: ["ROLE_WATSON", "ROLE_LESTRADE"],
+    meRole: ''
   }),
   props: {
     item: null,
@@ -67,7 +73,8 @@ export default {
             id: this.item.id,
             name: this.name
           }
-          axios.create({baseURL: this.baseUrl}).put('/crimetype/' + this.item.id, data)
+          axios.create({baseURL: this.baseUrl, headers: {
+              'Authorization': 'Bearer '+ VueCookies.get("token")}}).put('/crimetype/' + this.item.id, data)
               .then(resp => {
                 console.log(resp.data)
                 window.location.reload()
@@ -83,7 +90,8 @@ export default {
                 })
               })
         } else {
-          axios.create({baseURL: this.baseUrl}).post('/crimetype', data)
+          axios.create({baseURL: this.baseUrl, headers: {
+              'Authorization': 'Bearer '+ VueCookies.get("token")}}).post('/crimetype', data)
               .then(resp => {
                 console.log(resp.data)
                 window.location.reload()
@@ -122,7 +130,8 @@ export default {
     checkAndFill(item) {
       if (item != null) {
         axios.create({
-          baseURL: this.baseUrl
+          baseURL: this.baseUrl, headers: {
+            'Authorization': 'Bearer '+ VueCookies.get("token")}
         }).get('/crimetype/' + item.id).then(resp => {
           this.name = resp.data.name
         })
@@ -130,6 +139,7 @@ export default {
     }
   },
   beforeMount() {
+    this.meRole = VueCookies.get("role")
     this.checkAndFill(this.item)
   }
 }

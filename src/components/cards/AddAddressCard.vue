@@ -4,7 +4,7 @@
       <v-card-title>
         <span class="text-h5">User Profile</span>
       </v-card-title>
-      <v-card-text>
+      <v-card-text v-if="!blackList.includes(meRole)">
         <v-row>
           <v-col>
             <v-text-field
@@ -30,6 +30,9 @@
           </v-col>
         </v-row>
       </v-card-text>
+      <v-card-text v-if="blackList.includes(meRole)">
+        <span class="text-h5">No access to add</span>
+      </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
@@ -43,6 +46,7 @@
             color="blue darken-1"
             text
             @click="saveAndClose"
+            v-if="!blackList.includes(meRole)"
         >
           Save
         </v-btn>
@@ -53,6 +57,7 @@
 
 <script>
 import axios from "axios";
+import VueCookies from "vue-cookies";
 
 export default {
   name: "AddAddressCard",
@@ -69,7 +74,8 @@ export default {
       v => !!/^\d*$/.test(v) || 'Is not number'
     ],
     valid: true,
-    blackList: [],
+    blackList: ["ROLE_WATSON", "ROLE_LESTRADE"],
+    meRole: ''
   }),
   props: {
     item: null,
@@ -90,7 +96,8 @@ export default {
               street: this.street,
               house: this.house,
             }
-            axios.create({baseURL: this.baseUrl}).put('/address/' + this.item.id, data)
+            axios.create({baseURL: this.baseUrl, headers: {
+                'Authorization': 'Bearer '+ VueCookies.get("token")}}).put('/address/' + this.item.id, data)
                 .then(resp => {
                   console.log(resp.data)
                   window.location.reload()
@@ -106,7 +113,8 @@ export default {
                   })
                 })
           } else {
-            axios.create({baseURL: this.baseUrl}).post('/address', data)
+            axios.create({baseURL: this.baseUrl, headers: {
+                'Authorization': 'Bearer '+ VueCookies.get("token")}}).post('/address', data)
                 .then(resp => {
                   console.log(resp.data)
                   window.location.reload()
@@ -145,7 +153,8 @@ export default {
       checkAndFill(item) {
         if (item != null) {
           axios.create({
-            baseURL: this.baseUrl
+            baseURL: this.baseUrl, headers: {
+              'Authorization': 'Bearer '+ VueCookies.get("token")}
           }).get('/address/' + item.id).then(resp => {
             this.city = resp.data.city
             this.street = resp.data.street
@@ -155,6 +164,7 @@ export default {
       }
   },
   beforeMount() {
+    this.meRole = VueCookies.get("role")
     this.checkAndFill(this.item)
   },
 }

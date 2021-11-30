@@ -4,7 +4,7 @@
     <v-card-title>
       <span class="text-h5">Performer Profile</span>
     </v-card-title>
-    <v-card-text>
+    <v-card-text v-if="!blackList.includes(meRole)">
       <v-select
           label="Human"
           :items="humans"
@@ -17,6 +17,9 @@
           v-model="selectAddress"
           :rules="clearFieldValid"
       ></v-select>
+    </v-card-text>
+    <v-card-text v-if="blackList.includes(meRole)">
+      <span class="text-h5">No access to add</span>
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
@@ -31,6 +34,7 @@
           color="blue darken-1"
           text
           @click="saveAndClose"
+          v-if="!blackList.includes(meRole)"
       >
         Save
       </v-btn>
@@ -41,6 +45,7 @@
 
 <script>
 import axios from "axios";
+import VueCookies from "vue-cookies";
 
 export default {
   name: "AddPerformer",
@@ -58,7 +63,8 @@ export default {
       v => !!v || 'Field is required'
     ],
     valid: true,
-    blackList: [],
+    blackList: ["ROLE_WATSON", "ROLE_LESTRADE"],
+    meRole: ''
   }),
   props: {
     item: null,
@@ -77,7 +83,8 @@ export default {
         }
         if (this.flagEdit) {
           axios
-              .create({baseURL: this.baseUrl})
+              .create({baseURL: this.baseUrl, headers: {
+                  'Authorization': 'Bearer '+ VueCookies.get("token")}})
               .put('/performer/' + this.item.id, data)
               .then(resp => {
                 console.log(resp.data)
@@ -103,7 +110,8 @@ export default {
               })
         } else {
           axios
-              .create({baseURL: this.baseUrl})
+              .create({baseURL: this.baseUrl, headers: {
+                  'Authorization': 'Bearer '+ VueCookies.get("token")}})
               .post('/performer', data)
               .then(resp => {
                 console.log(resp.data)
@@ -142,7 +150,8 @@ export default {
     },
     getDataFromHumanList() {
       axios.create({
-        baseURL: this.baseUrl
+        baseURL: this.baseUrl, headers: {
+          'Authorization': 'Bearer '+ VueCookies.get("token")}
       }).get('/human').then(resp => {
         this.mainHumans = resp.data;
         for (let i = 0; i < this.mainHumans.length; i++) {
@@ -152,7 +161,8 @@ export default {
     },
     getDataFromAddressList() {
       axios.create({
-        baseURL: this.baseUrl
+        baseURL: this.baseUrl, headers: {
+          'Authorization': 'Bearer '+ VueCookies.get("token")}
       }).get('/address').then(resp => {
         this.mainAddresses = resp.data
         for (let i = 0; i < this.mainAddresses.length; i++) {
@@ -172,7 +182,8 @@ export default {
     checkAndFill(item) {
       if (item != null) {
         axios.create({
-          baseURL: this.baseUrl
+          baseURL: this.baseUrl, headers: {
+            'Authorization': 'Bearer '+ VueCookies.get("token")}
         }).get('/performer/' + item.id).then(resp => {
           this.selectHuman = resp.data.human.name + " " + resp.data.human.surname
           this.selectAddress = resp.data.address.city + " " + resp.data.address.street + " " + resp.data.address.house
@@ -181,6 +192,7 @@ export default {
     }
   },
   beforeMount() {
+    this.meRole = VueCookies.get("role")
     this.getDataFromHumanList()
     this.getDataFromAddressList()
     this.checkAndFill(this.item)
