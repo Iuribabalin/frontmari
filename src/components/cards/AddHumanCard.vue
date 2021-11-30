@@ -91,6 +91,7 @@ export default {
       v => v < 100 || 'Is over age',
     ],
     valid: true,
+    blackList: [],
   }),
   props: {
     item: null,

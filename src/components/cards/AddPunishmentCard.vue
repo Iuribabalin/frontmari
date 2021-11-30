@@ -2,7 +2,7 @@
   <v-form v-model="valid" lazy-validation ref="form">
     <v-card>
       <v-card-title>
-        <span class="text-h5">User Profile</span>
+        <span class="text-h5">Punishment</span>
       </v-card-title>
       <v-card-text>
         <v-row>
@@ -21,10 +21,14 @@
                 label="Until"
                 :rules="clearFieldValid"
                 required
+                v-if="!blackList.includes(meRole)"
             ></v-text-field>
           </v-col>
         </v-row>
       </v-card-text>
+<!--      <v-card-text v-if="blackList.includes(meRole)">-->
+<!--        <span class="text-h5">No access to add</span>-->
+<!--      </v-card-text>-->
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
@@ -34,6 +38,14 @@
         >
           Close
         </v-btn>
+<!--        <v-btn-->
+<!--            color="blue darken-1"-->
+<!--            text-->
+<!--            @click="saveAndClose"-->
+<!--            v-if="!blackList.includes(meRole)"-->
+<!--        >-->
+<!--          Save-->
+<!--        </v-btn>-->
         <v-btn
             color="blue darken-1"
             text
@@ -48,6 +60,7 @@
 
 <script>
 import axios from "axios";
+import VueCookies from "vue-cookies";
 
 export default {
   name: "AddPunishmentCard",
@@ -59,6 +72,8 @@ export default {
       v => !!v || 'Field is required'
     ],
     valid: true,
+    blackList: ["ROLE_SHERLOCK"],
+    meRole: ''
   }),
   props: {
     item: null,
@@ -66,7 +81,7 @@ export default {
   },
   methods: {
     saveAndClose() {
-      if(this.$refs.form.validate()) {
+      if (this.$refs.form.validate()) {
         let data = {
           name: this.name,
           lasting: this.lasting
@@ -119,16 +134,16 @@ export default {
         })
       }
     },
-      doSomething() {
-        let data = {
-          errorText: '',
-          dialog: false,
-          error: false
-        }
-        this.$emit('updateParent', {
-          data
-        })
-      },
+    doSomething() {
+      let data = {
+        errorText: '',
+        dialog: false,
+        error: false
+      }
+      this.$emit('updateParent', {
+        data
+      })
+    },
     checkAndFill(item) {
       if (item != null) {
         axios.create({
@@ -139,11 +154,12 @@ export default {
         })
       }
     }
-    },
-    beforeMount() {
-      this.checkAndFill(this.item)
-    }
+  },
+  beforeMount() {
+    this.meRole = VueCookies.get("role")
+    this.checkAndFill(this.item)
   }
+}
 </script>
 
 <style scoped>

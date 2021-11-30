@@ -50,8 +50,8 @@ export default {
       })
     },
     exit() {
-      VueCookies.set('token' , '')
-      VueCookies.set('role' , '')
+      VueCookies.remove('token')
+      VueCookies.remove('role')
       this.$router.push('/')
     }
   }

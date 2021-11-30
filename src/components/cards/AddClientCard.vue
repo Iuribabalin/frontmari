@@ -74,6 +74,7 @@ export default {
       v => !!v || 'Field is required'
     ],
     valid: true,
+    blackList: [],
   }),
   props: {
     item: null,

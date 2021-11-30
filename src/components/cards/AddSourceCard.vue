@@ -4,7 +4,7 @@
       <v-card-title>
         <span class="text-h5">User Profile</span>
       </v-card-title>
-      <v-card-text>
+      <v-card-text v-if="!blackList.includes(meRole)">
         <v-row>
           <v-col>
             <v-text-field
@@ -25,6 +25,9 @@
           </v-col>
         </v-row>
       </v-card-text>
+      <v-card-text v-if="blackList.includes(meRole)">
+        <span class="text-h5">No access to add</span>
+      </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
@@ -38,6 +41,7 @@
             color="blue darken-1"
             text
             @click="saveAndClose"
+            v-if="!blackList.includes(meRole)"
         >
           Save
         </v-btn>
@@ -48,6 +52,7 @@
 
 <script>
 import axios from "axios";
+import VueCookies from "vue-cookies";
 
 export default {
   name: "AddSourceCard",
@@ -59,6 +64,8 @@ export default {
       v => !!v || 'Field is required'
     ],
     valid: true,
+    blackList: ["ROLE_SHERLOCK"],
+    meRole:''
   }),
   props: {
     item: null,
@@ -66,7 +73,7 @@ export default {
   },
   methods: {
     saveAndClose() {
-      if(this.$refs.form.validate()) {
+      if (this.$refs.form.validate()) {
         let data = {
           name: this.name,
           rating: this.rating
@@ -141,6 +148,7 @@ export default {
     }
   },
   beforeMount() {
+    this.meRole = VueCookies.get("role")
     this.checkAndFill(this.item)
   }
 }

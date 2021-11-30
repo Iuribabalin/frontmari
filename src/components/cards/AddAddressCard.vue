@@ -69,6 +69,7 @@ export default {
       v => !!/^\d*$/.test(v) || 'Is not number'
     ],
     valid: true,
+    blackList: [],
   }),
   props: {
     item: null,

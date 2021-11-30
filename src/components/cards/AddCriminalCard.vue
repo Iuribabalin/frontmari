@@ -4,7 +4,7 @@
       <v-card-title>
         <span class="text-h5">User Profile</span>
       </v-card-title>
-      <v-card-text>
+      <v-card-text v-if="!blackList.includes()">
         <v-row>
           <v-col>
             <v-select
@@ -35,11 +35,9 @@
             ></v-select>
           </v-col>
         </v-row>
-        <v-row>
-
-
-        </v-row>
-
+      </v-card-text>
+      <v-card-text v-if="blackList.includes(meRole)">
+        <span class="text-h5">No access to add</span>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -54,6 +52,7 @@
             color="blue darken-1"
             text
             @click="saveAndClose"
+            v-if="!blackList.includes(meRole)"
         >
           Save
         </v-btn>
@@ -64,6 +63,7 @@
 
 <script>
 import axios from "axios";
+import VueCookies from "vue-cookies";
 
 export default {
   name: "AddCriminalCard",
@@ -85,6 +85,8 @@ export default {
       v => !!v || 'Field is required'
     ],
     valid: true,
+    blackList: ["ROLE_SHERLOCK"],
+    meRole: ''
   }),
   props: {
     item: null,
@@ -92,7 +94,7 @@ export default {
   },
   methods: {
     saveAndClose() {
-      if(this.$refs.form.validate()) {
+      if (this.$refs.form.validate()) {
         this.findInMass(this.selectHuman, this.humans)
         let human_id = this.mainHuman[this.findIndex].id
         this.findInMass(this.selectCase, this.cases)
@@ -183,7 +185,7 @@ export default {
       }).get('/case').then(resp => {
         this.mainCase = resp.data;
         for (let i = 0; i < resp.data.length; i++) {
-            this.cases.push(resp.data[i].caseName)
+          this.cases.push(resp.data[i].caseName)
         }
       })
     },
@@ -239,6 +241,7 @@ export default {
     }
   },
   beforeMount() {
+    this.meRole = VueCookies.get("role")
     this.getDataFromHumanList()
     this.getDataFromPunishmentList()
     this.getDataFromCrimeTypeList()

@@ -108,7 +108,8 @@ export default {
     clearFieldValid: [
       v => !!v || 'Field is required'
     ],
-    valid: true
+    valid: true,
+    blackList: [],
   }),
   props: {
     item: null,
