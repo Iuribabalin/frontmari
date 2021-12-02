@@ -22,7 +22,7 @@
         >
           mdi-delete
         </v-icon>
-        <v-icon v-if="$route.path === '/case'"
+        <v-icon v-if="$route.path === '/case' && !blackList.includes(meRole) "
                 small
                 @click="endCase(item)"
         >
@@ -54,7 +54,9 @@ export default {
     headers: [],
     desserts: [],
     renderComponent: true,
-    baseUrl: 'http://localhost:10511'
+    baseUrl: 'http://localhost:10511',
+    blackList: ["ROLE_SHERLOCK", "ROLE_WATSON"],
+    meRole: ''
   }),
   methods: {
     getTableInfo: function () {
@@ -97,7 +99,8 @@ export default {
     },
     endCase: function (item) {
       axios.create({
-        baseURL: this.baseUrl
+        baseURL: this.baseUrl, headers: {
+          'Authorization': 'Bearer '+ VueCookies.get("token")}
       }).get(this.urlProps + "/end/" + item.id)
           .then(resp => {
             console.log(resp.data)
@@ -125,6 +128,7 @@ export default {
 
 
   beforeMount() {
+    this.meRole = VueCookies.get("role")
     this.getTableInfo()
   },
 }

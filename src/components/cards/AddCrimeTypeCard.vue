@@ -55,7 +55,7 @@ export default {
       v => !!v || 'Field is required'
     ],
     valid: true,
-    blackList: ["ROLE_WATSON", "ROLE_LESTRADE"],
+    blackList: ["ROLE_WATSON"],
     meRole: ''
   }),
   props: {

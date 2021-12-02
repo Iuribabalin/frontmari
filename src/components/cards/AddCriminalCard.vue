@@ -85,7 +85,7 @@ export default {
       v => !!v || 'Field is required'
     ],
     valid: true,
-    blackList: ["ROLE_SHERLOCK", "ROLE_WATSON"],
+    blackList: ["ROLE_WATSON"],
     meRole: ''
   }),
   props: {
@@ -116,7 +116,8 @@ export default {
             crimeType_id: crimetype_id,
             punishment_id: punishment_id
           }
-          axios.create({baseURL: this.baseUrl}).put('/criminal/' + this.item.id, data)
+          axios.create({baseURL: this.baseUrl, headers: {
+              'Authorization': 'Bearer '+ VueCookies.get("token")}}).put('/criminal/' + this.item.id, data)
               .then(resp => {
                 console.log(resp.data)
                 window.location.reload()
@@ -143,7 +144,8 @@ export default {
                 console.log(errData)
               })
         } else {
-          axios.create({baseURL: this.baseUrl}).post('/criminal', data)
+          axios.create({baseURL: this.baseUr, headers: {
+              'Authorization': 'Bearer '+ VueCookies.get("token")}}).post('/criminal', data)
               .then(resp => {
                 console.log(resp.data)
                 window.location.reload()
@@ -181,7 +183,8 @@ export default {
     },
     getDataFromCaseList() {
       axios.create({
-        baseURL: this.baseUrl
+        baseURL: this.baseUrl, headers: {
+          'Authorization': 'Bearer '+ VueCookies.get("token")}
       }).get('/case').then(resp => {
         this.mainCase = resp.data;
         for (let i = 0; i < resp.data.length; i++) {
@@ -191,7 +194,8 @@ export default {
     },
     getDataFromHumanList() {
       axios.create({
-        baseURL: this.baseUrl
+        baseURL: this.baseUrl, headers: {
+          'Authorization': 'Bearer '+ VueCookies.get("token")}
       }).get('/human').then(resp => {
         this.mainHuman = resp.data;
         for (let i = 0; i < resp.data.length; i++) {
@@ -201,7 +205,8 @@ export default {
     },
     getDataFromCrimeTypeList() {
       axios.create({
-        baseURL: this.baseUrl
+        baseURL: this.baseUrl, headers: {
+          'Authorization': 'Bearer '+ VueCookies.get("token")}
       }).get('/crimetype').then(resp => {
         this.mainCrimetype = resp.data;
         for (let i = 0; i < resp.data.length; i++) {
@@ -211,7 +216,8 @@ export default {
     },
     getDataFromPunishmentList() {
       axios.create({
-        baseURL: this.baseUrl
+        baseURL: this.baseUrl, headers: {
+          'Authorization': 'Bearer '+ VueCookies.get("token")}
       }).get('/punishment').then(resp => {
         this.mainPunishment = resp.data;
         for (let i = 0; i < resp.data.length; i++) {
@@ -230,7 +236,8 @@ export default {
     checkAndFill(item) {
       if (item != null) {
         axios.create({
-          baseURL: this.baseUrl
+          baseURL: this.baseUrl, headers: {
+            'Authorization': 'Bearer '+ VueCookies.get("token")}
         }).get('/criminal/' + item.id).then(resp => {
           this.selectCase = resp.data.c.name
           this.selectHuman = resp.data.human.name + " " + resp.data.human.surname

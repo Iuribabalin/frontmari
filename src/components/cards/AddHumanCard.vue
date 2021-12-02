@@ -95,7 +95,7 @@ export default {
       v => v < 100 || 'Is over age',
     ],
     valid: true,
-    blackList: ["ROLE_WATSON", "ROLE_LESTRADE"],
+    blackList: ["ROLE_WATSON"],
     meRole: ''
   }),
   props: {

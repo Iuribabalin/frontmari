@@ -80,7 +80,7 @@
             color="blue darken-1"
             text
             @click="saveAndClose"
-            v-if="!blackList.includes(meRole)"
+            v-if="meRole=='ROLE_SHERLOCK'"
         >
           Save
         </v-btn>
