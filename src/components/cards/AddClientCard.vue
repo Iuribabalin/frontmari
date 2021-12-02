@@ -2,7 +2,7 @@
   <v-form v-model="valid" lazy-validation ref="form">
     <v-card>
       <v-card-title>
-        <span class="text-h5">User Profile</span>
+        <span class="text-h5">Client</span>
       </v-card-title>
       <v-card-text v-if="!blackList.includes(meRole)">
         <v-row>

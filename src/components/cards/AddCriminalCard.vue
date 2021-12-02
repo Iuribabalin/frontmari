@@ -2,7 +2,7 @@
   <v-form v-model="valid" lazy-validation ref="form">
     <v-card>
       <v-card-title>
-        <span class="text-h5">User Profile</span>
+        <span class="text-h5">Criminal</span>
       </v-card-title>
       <v-card-text v-if="!blackList.includes(meRole)">
         <v-row>
@@ -85,7 +85,7 @@ export default {
       v => !!v || 'Field is required'
     ],
     valid: true,
-    blackList: ["ROLE_WATSON"],
+    blackList: ["ROLE_WATSON", "ROLE_SHERLOCK"],
     meRole: ''
   }),
   props: {
@@ -144,7 +144,7 @@ export default {
                 console.log(errData)
               })
         } else {
-          axios.create({baseURL: this.baseUr, headers: {
+          axios.create({baseURL: this.baseUrl, headers: {
               'Authorization': 'Bearer '+ VueCookies.get("token")}}).post('/criminal', data)
               .then(resp => {
                 console.log(resp.data)

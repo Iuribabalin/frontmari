@@ -2,7 +2,7 @@
   <v-form v-model="valid" lazy-validation ref="form">
     <v-card>
       <v-card-title>
-        <span class="text-h5">Case Profile</span>
+        <span class="text-h5">Case</span>
       </v-card-title>
       <v-card-text v-if=" meRole!='ROLE_LESTRADE'">
         <v-row>

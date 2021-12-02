@@ -2,7 +2,7 @@
   <v-form v-model="valid" lazy-validation ref="form">
     <v-card>
       <v-card-title>
-        <span class="text-h5">User Profile</span>
+        <span class="text-h5">Suspect</span>
       </v-card-title>
       <v-card-text v-if="!blackList.includes(meRole)">
         <v-row>
@@ -68,7 +68,7 @@ import axios from "axios";
 import VueCookies from "vue-cookies";
 
 export default {
-  name: "AddHumanCard",
+  name: "AddSuspectCard",
   data: () => ({
     humans:[],
     selectHuman:'',
