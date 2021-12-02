@@ -7,6 +7,11 @@
       </v-icon>
       Edit
     </v-btn>
+    <v-spacer/>
+    <v-card-title>
+      <span class="text-h6">
+    {{this.meRole}}</span>
+    </v-card-title>
     <v-btn color="red" outlined style="margin-right: 20px" @click="exit()">
       <v-icon dark style="margin-right: 5px">
         mdi-logout
@@ -22,6 +27,9 @@ import VueCookies from "vue-cookies";
 export default {
   name: "AppBar",
   components: {Dialog},
+  data: () => ({
+    meRole: '',
+  }),
   props: {
     nav_context: String,
     nowStatusButton:Boolean,
@@ -54,6 +62,9 @@ export default {
       VueCookies.remove('role')
       this.$router.push('/')
     }
+  },
+  beforeMount() {
+    this.meRole = VueCookies.get("role")
   }
 }
 </script>
